@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách công việc</title>
+    <!-- Link Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-4">
+    <h1 class="mb-4">Danh sách công việc</h1>
+
+    <div class="list-group">
+        <!-- Lặp qua danh sách jobs và hiển thị từng job -->
+        <div th:each="job : ${jobs}" class="list-group-item list-group-item-action mb-3 shadow-sm">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" th:text="${job.jobName}">Tên công việc</h5>
+                <small th:text="${job.company.compName}">Tên công ty</small>
+            </div>
+            <p class="mb-1" th:text="${job.jobDesc}">Mô tả công việc...</p>
+            <small>Địa điểm: <span th:text="${job.company.address.city}">Hà Nội</span></small>
+            <div class="d-flex mt-2">
+                <span class="badge badge-info mr-2">Du Lịch</span>
+                <span class="badge badge-success mr-2">Phụ Cấp</span>
+                <span class="badge badge-warning">Đồng Phục</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+<!--                <span class="text-danger font-weight-bold" th:text="'Lương: ' + ${job.salary}">Lương: Cạnh tranh</span>-->
+                <button class="btn btn-outline-primary btn-sm">Lưu việc làm</button>
+            </div>
+            <div class="text-right mt-2">
+<!--                <small>Cập nhật: <span th:text="${job.updatedAt}">11-11-2024</span></small>-->
+            </div>
+        </div>
+    </div>
+
+    <a href="/jobs/new" class="btn btn-primary mt-4">Thêm công việc mới</a>
+</div>
+
+<!-- Link Bootstrap JS (optional) and jQuery (for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

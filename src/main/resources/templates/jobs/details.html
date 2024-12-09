@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi Tiết Công Việc</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <!-- Success Notification -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <!-- Error Notification -->
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <h2 th:text="${job.jobName}">Tên công việc</h2>
+
+    <div class="mb-3">
+        <h5>Thông tin công ty</h5>
+        <p><strong>Công ty:</strong> <span th:text="${company.compName}">Tên công ty</span></p>
+        <p><strong>Email:</strong> <span th:text="${company.email}">Email công ty</span></p>
+        <p><strong>Số điện thoại:</strong> <span th:text="${company.phone}">Số điện thoại công ty</span></p>
+        <p><strong>Địa chỉ:</strong> <span th:text="${company.address.street} + ', ' + ${company.address.city}">Địa chỉ công ty</span></p>
+    </div>
+
+    <div class="mb-3">
+        <h5>Mô tả công việc</h5>
+        <p th:text="${job.jobDesc}">Mô tả chi tiết công việc</p>
+    </div>
+
+    <div class="mb-3">
+        <h5>Kỹ năng yêu cầu</h5>
+        <ul>
+<!--            <li th:each="skill : ${jobSkills}" th:text="${skill.skillName}">Tên kỹ năng</li>-->
+        </ul>
+    </div>
+    <!-- Form ứng tuyển -->
+    <form th:action="@{/candidates/jobs/{jobId}/apply(jobId=${job.id})}" method="post">
+        <button type="submit" class="btn btn-primary">Apply for this Job</button>
+    </form>
+    <a href="/" class="btn btn-primary">Quay lại danh sách công việc</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

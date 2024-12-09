@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate List</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>Candidate List</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Full Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>DOB</th>
+    <th>Address</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="candidate : ${candidates}">
+    <td th:text="${candidate.id}"></td>
+    <td th:text="${candidate.fullName}"></td>
+    <td th:text="${candidate.email}"></td>
+    <td th:text="${candidate.phone}"></td>
+    <td th:text="${candidate.dob}"></td>
+    <td th:text="${candidate.address.street} + ', ' + ${candidate.address.city}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

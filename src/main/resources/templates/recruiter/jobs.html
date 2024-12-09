@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý công việc</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-add {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .btn-add:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Quản lý Công Việc</h1>
+</header>
+<main>
+    <a href="/recruiter/jobs/new" class="btn-add">+ Thêm công việc mới</a>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên công việc</th>
+            <th>Mô tả</th>
+            <th>Danh sách ứng viên</th>
+            <th>Ngày đăng</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Lặp qua danh sách công việc -->
+        <tr th:each="job : ${jobs}">
+            <td th:text="${job.id}">1</td>
+            <td th:text="${job.jobName}">1</td>
+            <td th:text="${job.jobDesc}">Mô tả công việc</td>
+<!--            <td th:text="${job.description}">Chi tiết công việc</td>-->
+<!--            <td th:text="${job.createdAt}">2024-12-05</td>-->
+            <td>
+                <a th:href="@{/recruiter/jobs/{jobId}/candidates(jobId=${job.id})}" class="btn-view">Xem ứng viên</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

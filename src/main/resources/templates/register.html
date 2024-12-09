@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký tài khoản</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Đăng ký tài khoản</h2>
+    <form th:action="@{/register}" th:object="${account}" method="post">
+        <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <input type="text" th:field="*{username}" class="form-control" id="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input type="password" th:field="*{password}" class="form-control" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Đăng ký</button>
+    </form>
+    <!-- login.html -->
+    <div th:if="${param.registerSuccess}">
+        <p class="alert alert-success">Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.</p>
+    </div>
+</div>
+</body>
+</html>

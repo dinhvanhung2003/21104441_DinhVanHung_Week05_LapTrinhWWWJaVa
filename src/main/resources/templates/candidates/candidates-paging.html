@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate List - Paginated</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container my-4">
+    <h1 class="mb-4 text-center">Danh Sách Ứng Viên</h1>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Họ và Tên</th>
+            <th>Email</th>
+            <th>Số Điện Thoại</th>
+            <th>Ngày Sinh</th>
+            <th>Địa Chỉ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="candidate : ${candidatePage.content}">
+            <td th:text="${candidate.id}"></td>
+            <td th:text="${candidate.fullName}"></td>
+            <td th:text="${candidate.email}"></td>
+            <td th:text="${candidate.phone}"></td>
+            <td th:text="${candidate.dob}"></td>
+            <td th:text="${candidate.address.street + ', ' + candidate.address.city}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <!-- Previous Button -->
+            <li class="page-item" th:classappend="${!candidatePage.hasPrevious()} ? 'disabled'">
+                <a class="page-link" th:href="@{/candidates(page=${candidatePage.number - 1}, size=${candidatePage.size})}" tabindex="-1">Previous</a>
+            </li>
+
+            <!-- Page Numbers -->
+            <li class="page-item" th:each="pageNum : ${pageNumbers}" th:classappend="${pageNum == candidatePage.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{/candidates(page=${pageNum - 1}, size=${candidatePage.size})}" th:text="${pageNum}"></a>
+            </li>
+
+            <!-- Next Button -->
+            <li class="page-item" th:classappend="${!candidatePage.hasNext()} ? 'disabled'">
+                <a class="page-link" th:href="@{/candidates(page=${candidatePage.number + 1}, size=${candidatePage.size})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Link Bootstrap JS (optional) and jQuery (for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

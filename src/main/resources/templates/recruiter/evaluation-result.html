@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả Đánh giá</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header class="bg-dark text-white py-3">
+    <div class="container text-center">
+        <h1>Kết quả Đánh giá</h1>
+    </div>
+</header>
+<main class="container my-4">
+    <h2>Danh sách ứng viên được gửi email:</h2>
+    <ul class="list-group mt-3">
+        <li class="list-group-item list-group-item-info" th:each="candidate : ${invitedCandidates}">
+            <strong>ID:</strong> <span th:text="${candidate.id}"></span>,
+            <strong>Tên:</strong> <span th:text="${candidate.fullName}"></span>,
+            <strong>Email:</strong> <span th:text="${candidate.email}"></span>
+        </li>
+    </ul>
+    <a href="/recruiter/jobs" class="btn btn-primary mt-4">Quay lại danh sách công việc</a>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

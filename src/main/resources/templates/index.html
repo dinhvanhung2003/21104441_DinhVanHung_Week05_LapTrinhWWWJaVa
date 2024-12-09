@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - Danh sách công việc</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .job-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .job-company-logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .job-company-name {
+            color: #888;
+        }
+        .job-salary {
+            color: red;
+            font-weight: bold;
+        }
+        .job-location {
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .job-badge {
+            font-size: 0.8rem;
+            color: #fff;
+            background-color: #ff5722;
+            border-radius: 3px;
+            padding: 2px 6px;
+            margin-right: 5px;
+        }
+        .btn-apply {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Include header -->
+<div th:replace="~{header.html}"></div>
+<div class="container mt-4">
+    <h2 class="mb-4">Việc Làm Nổi Bật</h2>
+    <div class="row">
+        <div th:each="job : ${jobPage.content}" class="col-md-6 col-lg-4 mb-4">
+            <div class="job-card">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="job-company-logo mr-3">
+<!--                        <img th:src="${job.company.logoUrl}" alt="Logo Công ty" style="width: 60px; height: 60px;">-->
+                    </div>
+                    <div>
+                        <div class="job-title" th:text="${job.jobName}">Tên công việc</div>
+<!--                        <div class="job-company-name" th:text="${job.company.compName}">Tên công ty</div>-->
+                    </div>
+                </div>
+<!--                <p class="job-salary" th:text="'Lương: ' + ${job.salary}">Lương</p>-->
+<!--                <p class="job-location" th:text="${job.location}">Địa điểm</p>-->
+<!--                <p th:text="'Hạn nộp: ' + ${job.deadline}">Hạn nộp</p>-->
+                <div class="mt-3">
+                    <a href="#" class="btn btn-apply">Nộp đơn</a>
+                    <a th:href="@{/jobs/{jobId}(jobId=${job.id})}" class="btn btn-link">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination and Sorting Controls -->
+    <nav aria-label="Page navigation example" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${jobPage.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}">Trước</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${pageNumbers}" th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/home(page=${pageNum - 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${pageNum}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${jobPage.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/home(page=${currentPage + 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}">Sau</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Sorting Links -->
+    <div class="mt-4 text-center">
+        <a th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField='jobName', sortDir=${reverseSortDir})}">Sort by Job Name</a> |
+        <a th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField='salary', sortDir=${reverseSortDir})}">Sort by Salary</a>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
