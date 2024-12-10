@@ -3,6 +3,54 @@
 <head>
     <title>Chi Tiết Công Việc</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h5 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 20px;
+        }
+        p, ul {
+            font-size: 1rem;
+            color: #495057;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .alert {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -11,9 +59,12 @@
     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
     <!-- Error Notification -->
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Job Title -->
     <h2 th:text="${job.jobName}">Tên công việc</h2>
 
-    <div class="mb-3">
+    <!-- Company Info -->
+    <div>
         <h5>Thông tin công ty</h5>
         <p><strong>Công ty:</strong> <span th:text="${company.compName}">Tên công ty</span></p>
         <p><strong>Email:</strong> <span th:text="${company.email}">Email công ty</span></p>
@@ -21,22 +72,27 @@
         <p><strong>Địa chỉ:</strong> <span th:text="${company.address.street} + ', ' + ${company.address.city}">Địa chỉ công ty</span></p>
     </div>
 
-    <div class="mb-3">
+    <!-- Job Description -->
+    <div>
         <h5>Mô tả công việc</h5>
         <p th:text="${job.jobDesc}">Mô tả chi tiết công việc</p>
     </div>
 
-    <div class="mb-3">
+    <!-- Job Skills -->
+    <div>
         <h5>Kỹ năng yêu cầu</h5>
         <ul>
-<!--            <li th:each="skill : ${jobSkills}" th:text="${skill.skillName}">Tên kỹ năng</li>-->
+            <li th:each="skill : ${jobSkills}" th:text="${skill.skillName}">Tên kỹ năng</li>
         </ul>
     </div>
-    <!-- Form ứng tuyển -->
-    <form th:action="@{/candidates/jobs/{jobId}/apply(jobId=${job.id})}" method="post">
-        <button type="submit" class="btn btn-primary">Apply for this Job</button>
-    </form>
-    <a href="/" class="btn btn-primary">Quay lại danh sách công việc</a>
+
+    <!-- Apply Form -->
+    <div class="mt-4">
+        <form th:action="@{/candidates/jobs/{jobId}/apply(jobId=${job.id})}" method="post">
+            <button type="submit" class="btn btn-primary btn-block">Ứng tuyển ngay</button>
+        </form>
+        <a href="/" class="btn btn-secondary btn-block mt-2">Quay lại danh sách công việc</a>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

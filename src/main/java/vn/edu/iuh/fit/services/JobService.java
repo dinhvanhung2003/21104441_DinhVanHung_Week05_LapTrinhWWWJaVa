@@ -155,7 +155,12 @@ public class JobService {
 
         return qualifiedCandidates;
     }
-
+    public List<Job> findByCandidates(Candidate candidate) {
+        if (candidate == null) {
+            throw new IllegalArgumentException("Candidate không được null!");
+        }
+        return jobRepository.findByCandidates(candidate);
+    }
 
 
 }

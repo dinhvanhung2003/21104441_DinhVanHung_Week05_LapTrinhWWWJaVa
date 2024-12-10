@@ -1,5 +1,7 @@
 package vn.edu.iuh.fit.configs;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,15 +13,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import vn.edu.iuh.fit.models.Account;
+import vn.edu.iuh.fit.repositories.AccountRepository;
 import vn.edu.iuh.fit.services.UserService;
 
 @Configuration
 public class SecurityConfig {
-
+    @Autowired
+    private AccountRepository accountRepository;
     private final UserService userService;
 
     public SecurityConfig(UserService userService) {
         this.userService = userService;
+
     }
 
     @Bean
@@ -36,9 +42,32 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .successHandler((request, response, authentication) -> {
+                            // Lấy thông tin đăng nhập từ Spring Security
+                            String username = authentication.getName();
+
+                            // Truy xuất thông tin tài khoản từ cơ sở dữ liệu
+                            Account account = accountRepository.findByUsername(username)
+                                    .orElseThrow(() -> new RuntimeException("Account not found"));
+
+                            // Thiết lập accountId vào session
+                            HttpSession session = request.getSession();
+                            session.setAttribute("accountId", account.getId());
+                            System.out.println("Saved accountId to session: " + account.getId());
+                            // Kiểm tra lại session
+                            Long accountIdFromSession = (Long) session.getAttribute("accountId");
+                            System.out.println("Retrieved accountId from session: " + accountIdFromSession);
+                            // Chuyển hướng dựa trên trạng thái tài khoản
+                            if (account.getCandidate() == null) {
+                                response.sendRedirect("/candidates/register/full-info");
+                            } else {
+                                response.sendRedirect("/home");
+                            }
+                        })
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true") // Chuyển hướng sau khi đăng xuất

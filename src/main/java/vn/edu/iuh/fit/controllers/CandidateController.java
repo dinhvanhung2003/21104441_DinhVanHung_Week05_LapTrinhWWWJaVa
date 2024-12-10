@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import vn.edu.iuh.fit.dtos.CandidateFullInfoDTO;
+@SessionAttributes("accountId")
 @Controller
 @RequestMapping("/candidates")
 public class CandidateController {
@@ -51,7 +52,8 @@ public class CandidateController {
     private vn.edu.iuh.fit.services.SkillService skillService;
     @Autowired
     private vn.edu.iuh.fit.services.SkillLevelService skillLevelService;
-
+    @Autowired
+    private vn.edu.iuh.fit.services.JobService jobService;
     // Hiển thị danh sách candidates không phân trang
     @GetMapping("/list")
     public String showCandidateList(Model model) {
@@ -83,6 +85,7 @@ public class CandidateController {
 
         return "candidates/candidates-paging";
     }
+
     @PostMapping("/jobs/{jobId}/apply")
     public String applyForJob(@PathVariable Long jobId, Principal principal, RedirectAttributes redirectAttributes) {
         try {
@@ -96,147 +99,140 @@ public class CandidateController {
     }
 
 
+    @GetMapping("/profile")
+    public String showCandidateForm(Principal principal, HttpSession session, Model model) {
+        // Lấy danh sách quốc gia
+        List<String> countries = Arrays.stream(CountryCode.values())
+                .map(CountryCode::getName)
+                .filter(Objects::nonNull)
+                .sorted()
+                .collect(Collectors.toList());
+        model.addAttribute("countries", countries);
 
-    //dang ky tai khoan va thong tin ca nhan
+// Kiểm tra trạng thái cập nhật hồ sơ
 
-//    @GetMapping("/register/full-info")
-//    public String showCandidateForm(Principal principal, HttpSession session, Model model) {
-//
-//        List<String> countries = Arrays.stream(CountryCode.values())
-//                .map(CountryCode::getName) // Lấy tên quốc gia
-//                .filter(name -> name != null) // Loại bỏ các giá trị null
-//                .sorted() // Sắp xếp theo thứ tự bảng chữ cái
-//                .collect(Collectors.toList());
-//
-//        model.addAttribute("countries", countries);
-//
-//        Account account = accountRepository.findByUsername(principal.getName())
-//                .orElseThrow(() -> new RuntimeException("Account not found"));
-//
-//        // Lưu accountId vào session để sử dụng sau
-//        session.setAttribute("accountId", account.getId());
-//
-//        // Kiểm tra nếu Candidate đã hoàn tất thông tin, chuyển hướng về trang chủ
-//        if (account.getCandidate() != null) {
-//            return "redirect:/home"; // Chuyển hướng nếu tài khoản đã có thông tin Candidate
-//        }
-//
-//        Candidate candidate = new Candidate();
-//        candidate.setExperiences(List.of(new Experience())); // Tạo ít nhất một Experience
-//        candidate.setCandidateSkills(List.of(new CandidateSkill()));
-//        model.addAttribute("candidate", candidate);
-//        model.addAttribute("skills", skillService.findAll());
-//        model.addAttribute("skillLevels", List.of(SkillLevelType.BEGINNER, SkillLevelType.INTERMEDIATE, SkillLevelType.EXPERT));
-//        return "candidates/candidate-info";
-//    }
-//
-//
-//
-//    // Lưu thông tin Candidate
-//    @PostMapping("/register/full-info")
-//    public String registerFullInfo(@ModelAttribute CandidateFullInfoDTO candidateFullInfoDTO, HttpSession session) {
-//        // Lấy accountId từ session
-//        Long accountId = (Long) session.getAttribute("accountId");
-//        if (accountId == null) {
-//            throw new RuntimeException("Session không chứa thông tin tài khoản!");
-//        }
-//
-//        // Tìm tài khoản đã đăng nhập
-//        Account account = accountRepository.findById(accountId)
-//                .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại!"));
-//
-//        // Lưu thông tin Address
-//        Address address = candidateFullInfoDTO.getAddress();
-//        Address savedAddress = addressRepository.save(address);
-//
-//        // Lưu thông tin Candidate
-//        Candidate candidate = candidateFullInfoDTO.getCandidate();
-//
-//        candidate.setAddress(savedAddress);
-//        Candidate savedCandidate = candidateRepository.save(candidate);
-//
-//        // Gán candidate vào tài khoản
-//        account.setCandidate(savedCandidate);
-//        accountRepository.save(account);
-//
-//        // Lưu thông tin Experience
-//        List<Experience> experiences = candidateFullInfoDTO.getExperiences();
-//        experiences.forEach(exp -> exp.setCandidate(savedCandidate));
-//        experienceRepository.saveAll(experiences);
-//
-//        // Lưu thông tin CandidateSkill
-//        List<CandidateSkill> candidateSkills = candidateFullInfoDTO.getCandidateSkills();
-//        candidateSkills.forEach(skill -> skill.setCandidate(savedCandidate));
-//        candidateSkillRepository.saveAll(candidateSkills);
-//        System.out.println("Candidate DOB: " + candidate.getDob());
-//        return "redirect:/home"; // Chuyển hướng về trang chủ
-//    }
-// Hiển thị form đăng ký thông tin cá nhân
-@GetMapping("/register/full-info")
-public String showCandidateForm(Principal principal, HttpSession session, Model model) {
-    List<String> countries = Arrays.stream(CountryCode.values())
-            .map(CountryCode::getName)
-            .filter(Objects::nonNull)
-            .sorted()
-            .collect(Collectors.toList());
+        // Lấy thông tin tài khoản qua username
+        Account account = accountRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Account not found"));
 
-    model.addAttribute("countries", countries);
+        // Lưu accountId vào session
+        Long accountId = account.getId();
+        session.setAttribute("accountId", accountId);
+        // Kiểm tra trạng thái cập nhật hồ sơ
+        boolean isProfileUpdated = account.getCandidate() != null;
 
-    Account account = accountRepository.findByUsername(principal.getName())
-            .orElseThrow(() -> new RuntimeException("Account not found"));
+        // Gán trạng thái vào model
+        model.addAttribute("isProfileUpdated", isProfileUpdated);
+        // Chuẩn bị dữ liệu khác
+        CandidateFullInfoDTO candidateFullInfoDTO = new CandidateFullInfoDTO();
+        candidateFullInfoDTO.setCandidate(isProfileUpdated ? account.getCandidate() : new Candidate());
+        candidateFullInfoDTO.setAddress(isProfileUpdated ? account.getCandidate().getAddress() : new Address());
+        candidateFullInfoDTO.setExperiences(isProfileUpdated ? account.getCandidate().getExperiences() : Collections.singletonList(new Experience()));
+        candidateFullInfoDTO.setCandidateSkills(isProfileUpdated ? account.getCandidate().getCandidateSkills() : Collections.singletonList(new CandidateSkill()));
 
-    session.setAttribute("accountId", account.getId());
+        // Thêm các dữ liệu vào model
+        model.addAttribute("candidateFullInfoDTO", candidateFullInfoDTO);
+        model.addAttribute("skills", skillService.findAll());
+        model.addAttribute("skillLevels", List.of(SkillLevelType.BEGINNER, SkillLevelType.INTERMEDIATE, SkillLevelType.EXPERT));
 
-    if (account.getCandidate() != null) {
-        return "redirect:/home";
+        return "candidates/candidate-info"; // Trả về view để hiển thị form
     }
 
-    CandidateFullInfoDTO candidateFullInfoDTO = new CandidateFullInfoDTO();
-    candidateFullInfoDTO.setCandidate(new Candidate());
-    candidateFullInfoDTO.setAddress(new Address());
-    candidateFullInfoDTO.setExperiences(Collections.singletonList(new Experience()));
-    candidateFullInfoDTO.setCandidateSkills(Collections.singletonList(new CandidateSkill()));
 
-    model.addAttribute("candidateFullInfoDTO", candidateFullInfoDTO);
-    model.addAttribute("skills", skillService.findAll());
-    model.addAttribute("skillLevels", List.of(SkillLevelType.BEGINNER, SkillLevelType.INTERMEDIATE, SkillLevelType.EXPERT));
-    return "candidates/candidate-info";
-}
 
-    // Xử lý lưu thông tin cá nhân
-    @PostMapping("/register/full-info")
-    public String registerFullInfo(@ModelAttribute CandidateFullInfoDTO candidateFullInfoDTO, HttpSession session) {
+
+    @PostMapping("/profile")
+    public String saveOrUpdateCandidateProfile(
+            @ModelAttribute CandidateFullInfoDTO candidateFullInfoDTO,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        // Lấy thông tin accountId từ session
         Long accountId = (Long) session.getAttribute("accountId");
         if (accountId == null) {
-            throw new RuntimeException("Session không chứa thông tin tài khoản!");
+            throw new RuntimeException("Account ID không tồn tại trong session!");
         }
 
+        // Lấy thông tin tài khoản từ database
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại!"));
 
-        Address address = candidateFullInfoDTO.getAddress();
-        Address savedAddress = addressRepository.save(address);
-
-        Candidate candidate = candidateFullInfoDTO.getCandidate();
+        // Lấy hoặc tạo mới thông tin ứng viên
+        Candidate candidate = account.getCandidate();
         if (candidate == null) {
-            throw new RuntimeException("Candidate không được null!");
+            candidate = new Candidate();
         }
 
-        candidate.setAddress(savedAddress);
-        Candidate savedCandidate = candidateRepository.save(candidate);
+        // Cập nhật thông tin ứng viên từ DTO
+        candidate.setFullName(candidateFullInfoDTO.getCandidate().getFullName());
+        candidate.setDob(candidateFullInfoDTO.getCandidate().getDob());
+        candidate.setEmail(candidateFullInfoDTO.getCandidate().getEmail());
+        candidate.setPhone(candidateFullInfoDTO.getCandidate().getPhone());
 
+        // Xử lý địa chỉ
+        Address address = candidateFullInfoDTO.getAddress();
+        Address savedAddress = addressRepository.save(address);
+        candidate.setAddress(savedAddress);
+
+        // Lưu thông tin ứng viên
+        Candidate savedCandidate = candidateRepository.save(candidate);
         account.setCandidate(savedCandidate);
         accountRepository.save(account);
 
+        // Xử lý danh sách kinh nghiệm
         List<Experience> experiences = candidateFullInfoDTO.getExperiences();
         experiences.forEach(exp -> exp.setCandidate(savedCandidate));
         experienceRepository.saveAll(experiences);
 
+        // Xử lý danh sách kỹ năng
         List<CandidateSkill> candidateSkills = candidateFullInfoDTO.getCandidateSkills();
         candidateSkills.forEach(skill -> skill.setCandidate(savedCandidate));
         candidateSkillRepository.saveAll(candidateSkills);
 
-        return "redirect:/home";
+        // Thêm thông báo thành công
+        redirectAttributes.addFlashAttribute("successMessage", "Thông tin ứng viên đã được lưu thành công!");
+
+        return "redirect:/candidates/dashboard"; // Chuyển hướng về trang dashboard
+    }
+    //trang dashboard
+    @GetMapping("/dashboard")
+    public String showDashboard(Model model, Principal principal, HttpSession session) {
+        // Lấy thông tin tài khoản từ session
+        Long accountId = (Long) session.getAttribute("accountId");
+        if (accountId == null) {
+            throw new RuntimeException("Account ID không tồn tại trong session!");
+        }
+
+        // Lấy thông tin tài khoản từ database
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại!"));
+
+        // Lấy danh sách công việc đã nộp
+        List<Job> appliedJobs = jobService.findByCandidates(account.getCandidate());
+
+        // Thêm thông tin vào model
+        model.addAttribute("username", principal.getName());
+        model.addAttribute("candidate", account.getCandidate());
+        model.addAttribute("appliedJobs", appliedJobs);
+
+        return "candidates/dashboard"; // Tên file view cho trang Dashboard
+    }
+    @GetMapping("/applied-jobs")
+    public String showAppliedJobs(Model model, Principal principal, HttpSession session) {
+        // Lấy thông tin tài khoản từ session
+        Long accountId = (Long) session.getAttribute("accountId");
+        if (accountId == null) {
+            throw new RuntimeException("Account ID không tồn tại trong session!");
+        }
+        // Lấy thông tin tài khoản từ database
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại!"));
+
+        // Lấy danh sách công việc đã ứng tuyển
+        List<Job> appliedJobs = jobService.findByCandidates(account.getCandidate());
+
+        // Thêm thông tin vào model
+        model.addAttribute("appliedJobs", appliedJobs);
+        return "candidates/candidate-jobs"; // Tên file view cho danh sách công việc đã ứng tuyển
     }
 
 }

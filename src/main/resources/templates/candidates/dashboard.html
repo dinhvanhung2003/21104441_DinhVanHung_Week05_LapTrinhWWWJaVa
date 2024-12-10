@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #1e1e2f;
+            color: white;
+            padding-top: 20px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #007bff;
+            border-radius: 5px;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">
+        <span id="candidateName" th:text="${candidate.fullName}">Tên ứng viên</span>
+    </div>
+    <ul>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="/candidates/profile">Hồ sơ cá nhân</a></li>
+        <li><a href="/candidates/applied-jobs">Danh sách công việc đã nộp</a></li>
+        <li><a href="#logout" class="text-danger">Đăng xuất</a></li>
+    </ul>
+</div>
+
+<div class="content">
+    <h1>Candidate Dashboard</h1>
+
+    <!-- Dashboard Cards -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <h2>Hồ sơ cá nhân</h2>
+                <p>Chỉnh sửa thông tin cá nhân và cập nhật hồ sơ ứng tuyển của bạn.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <h2>Danh sách công việc đã nộp</h2>
+                <p>Quản lý danh sách công việc mà bạn đã ứng tuyển.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <h2>Đăng xuất</h2>
+                <p>Thoát khỏi tài khoản của bạn một cách an toàn.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
