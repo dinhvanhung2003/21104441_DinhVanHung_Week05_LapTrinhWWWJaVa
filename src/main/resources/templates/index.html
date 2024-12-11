@@ -8,7 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <style>
+        nav ul li {
+            border: 1px solid red !important;
+            display: inline-block !important;
+        }
+    </style>
 </head>
 <body class="font-sans text-gray-900">
 
@@ -55,15 +60,20 @@
     <!-- Pagination -->
     <nav class="mt-8 flex justify-center" aria-label="Pagination" th:if="${pageNumbers != null}">
         <ul class="inline-flex items-center space-x-2">
-            <li th:classappend="${jobPage.hasPrevious()} ? '' : 'opacity-50 pointer-events-none'}">
+            <!-- Previous Button -->
+            <li th:classappend="${jobPage.hasPrevious()} ? '' : 'opacity-50 pointer-events-none'">
                 <a th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}"
                    class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Trước</a>
             </li>
+
+            <!-- Page Numbers -->
             <li th:each="pageNum : ${pageNumbers}" th:classappend="${pageNum == currentPage} ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'"
                 class="px-3 py-1 rounded hover:bg-gray-300">
                 <a th:href="@{/home(page=${pageNum}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${pageNum}"></a>
             </li>
-            <li th:classappend="${jobPage.hasNext()} ? '' : 'opacity-50 pointer-events-none'}">
+
+            <!-- Next Button -->
+            <li th:classappend="${jobPage.hasNext()} ? '' : 'opacity-50 pointer-events-none'">
                 <a th:href="@{/home(page=${currentPage + 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}"
                    class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Sau</a>
             </li>
@@ -72,7 +82,10 @@
 
 
 
+
 </div>
+<!-- Footer -->
+
 
 </body>
 </html>

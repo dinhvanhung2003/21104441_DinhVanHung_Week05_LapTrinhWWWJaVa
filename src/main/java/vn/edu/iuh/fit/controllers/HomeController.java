@@ -62,6 +62,8 @@ public class HomeController {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
+        System.out.println("Total Pages: " + jobPage.getTotalPages());
+        System.out.println("Total Elements: " + jobPage.getTotalElements());
 
         return "index.html";
     }

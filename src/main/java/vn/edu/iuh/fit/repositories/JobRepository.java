@@ -30,4 +30,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("SELECT j FROM Job j WHERE LOWER(j.jobName) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(j.company.compName) LIKE LOWER(CONCAT('%', :query, '%'))")
     Page<Job> searchByJobNameOrCompany(@Param("query") String query, Pageable pageable);
+    Page<Job> findAll(Pageable pageable);
 }
