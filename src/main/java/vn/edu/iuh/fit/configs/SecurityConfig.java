@@ -69,9 +69,20 @@ public class SecurityConfig {
                 )
 
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true") // Chuyển hướng sau khi đăng xuất
-                        .permitAll()
+                        .logoutUrl("/logout") // URL xử lý logout
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            // Xóa session khi logout
+                            HttpSession session = request.getSession(false); // Lấy session hiện tại
+                            if (session != null) {
+                                session.invalidate(); // Xóa session
+                            }
+
+                            // Chuyển hướng đến trang login với thông báo
+                            response.sendRedirect("/login?logout=true");
+                        })
+                        .invalidateHttpSession(true) // Vô hiệu hóa session
+                        .deleteCookies("JSESSIONID") // Xóa cookie của phiên làm việc
+                        .permitAll() // Cho phép mọi người truy cập
                 )
                 .exceptionHandling(customizer -> customizer
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
