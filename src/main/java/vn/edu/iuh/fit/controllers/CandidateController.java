@@ -19,6 +19,8 @@ import vn.edu.iuh.fit.services.JobApplicationService;
 import vn.edu.iuh.fit.services.RoleService;
 import com.neovisionaries.i18n.CountryCode;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -120,9 +122,31 @@ public class CandidateController {
         session.setAttribute("accountId", accountId);
         // Kiểm tra trạng thái cập nhật hồ sơ
         boolean isProfileUpdated = account.getCandidate() != null;
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Candidate candidate = isProfileUpdated ? account.getCandidate() : new Candidate();
+        String formattedDob = candidate.getDob() != null ? candidate.getDob().format(formatter) : "";
+        model.addAttribute("formattedDob", formattedDob);
         // Gán trạng thái vào model
         model.addAttribute("isProfileUpdated", isProfileUpdated);
+        // Định dạng ngày tháng cho từ ngày và đến ngày trong kinh nghiệm làm việc
+
+
+
+
+
+
+
+        if (candidate.getExperiences() != null) {
+            candidate.getExperiences().forEach(exp -> {
+                if (exp.getFromDate() == null) {
+                    exp.setFromDate(LocalDate.of(1970, 1, 1)); // Giá trị mặc định
+                }
+                if (exp.getToDate() == null) {
+                    exp.setToDate(LocalDate.of(1970, 1, 1)); // Giá trị mặc định
+                }
+            });
+        }
+
         // Chuẩn bị dữ liệu khác
         CandidateFullInfoDTO candidateFullInfoDTO = new CandidateFullInfoDTO();
         candidateFullInfoDTO.setCandidate(isProfileUpdated ? account.getCandidate() : new Candidate());

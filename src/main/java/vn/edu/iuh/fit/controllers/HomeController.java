@@ -47,6 +47,7 @@ public class HomeController {
         String currentSortField = sortField.orElse("jobName");
         String currentSortDir = sortDir.orElse("asc");
 
+        // Fetch data
         Page<Job> jobPage = jobService.findAll(currentPage - 1, pageSize, currentSortField, currentSortDir);
         model.addAttribute("jobPage", jobPage);
         model.addAttribute("currentPage", currentPage);
@@ -55,6 +56,7 @@ public class HomeController {
         model.addAttribute("sortDir", currentSortDir);
         model.addAttribute("reverseSortDir", currentSortDir.equals("asc") ? "desc" : "asc");
 
+        // Generate pagination numbers
         int totalPages = jobPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
@@ -63,6 +65,7 @@ public class HomeController {
 
         return "index.html";
     }
+
 
     @GetMapping("/jobs/{jobId}")
     public String getJobDetail(@PathVariable("jobId") Long jobId, Model model) {
@@ -97,5 +100,31 @@ public class HomeController {
 
         return "home"; // Trang chủ nếu thông tin đã hoàn tất
     }
+    @GetMapping("/search")
+    public String searchJobs(@RequestParam("query") String query,
+                             Model model,
+                             @RequestParam("page") Optional<Integer> page,
+                             @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(10);
+
+        // Call service to get search results
+        Page<Job> jobPage = jobService.searchJobs(query, currentPage - 1, pageSize);
+
+        model.addAttribute("jobPage", jobPage);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("query", query);
+
+        // Pagination numbers
+        int totalPages = jobPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "search-results"; // Returns a search result page
+    }
+
 
 }

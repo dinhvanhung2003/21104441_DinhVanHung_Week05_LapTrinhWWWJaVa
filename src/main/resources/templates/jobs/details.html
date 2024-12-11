@@ -1,102 +1,138 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi Tiết Công Việc</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
-        }
-        .container {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        h2 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #343a40;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h5 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #007bff;
-            margin-top: 20px;
-        }
-        p, ul {
-            font-size: 1rem;
-            color: #495057;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
-        .alert {
-            font-size: 1rem;
-            font-weight: 500;
-        }
-        ul {
-            padding-left: 20px;
-        }
-        ul li {
-            margin-bottom: 10px;
-        }
-    </style>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-gray-50 font-sans">
 
-<div class="container mt-5">
-    <!-- Success Notification -->
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <!-- Error Notification -->
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<!-- Header -->
+<div th:replace="~{header.html}"></div>
 
-    <!-- Job Title -->
-    <h2 th:text="${job.jobName}">Tên công việc</h2>
-
-    <!-- Company Info -->
-    <div>
-        <h5>Thông tin công ty</h5>
-        <p><strong>Công ty:</strong> <span th:text="${company.compName}">Tên công ty</span></p>
-        <p><strong>Email:</strong> <span th:text="${company.email}">Email công ty</span></p>
-        <p><strong>Số điện thoại:</strong> <span th:text="${company.phone}">Số điện thoại công ty</span></p>
-        <p><strong>Địa chỉ:</strong> <span th:text="${company.address.street} + ', ' + ${company.address.city}">Địa chỉ công ty</span></p>
+<!-- Main Content -->
+<div class="container mx-auto px-6 py-10">
+    <!-- Notifications -->
+    <div th:if="${successMessage}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded mb-6" role="alert">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6" role="alert">
+        <p th:text="${errorMessage}"></p>
     </div>
 
-    <!-- Job Description -->
-    <div>
-        <h5>Mô tả công việc</h5>
-        <p th:text="${job.jobDesc}">Mô tả chi tiết công việc</p>
-    </div>
+    <!-- Job Details Card -->
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+        <div class="px-6 py-8">
+            <!-- Job Title -->
+            <h2 class="text-4xl font-bold text-blue-800 mb-4 flex items-center">
+                <!-- Briefcase Icon -->
+                <svg class="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 7V6a3 3 0 116 0v1M3 13h18M5 10h14a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2z" />
+                </svg>
+                <span th:text="${job.jobName}">Tên công việc</span>
+            </h2>
 
-    <!-- Job Skills -->
-    <div>
-        <h5>Kỹ năng yêu cầu</h5>
-        <ul>
-            <li th:each="skill : ${jobSkills}" th:text="${skill.skillName}">Tên kỹ năng</li>
-        </ul>
-    </div>
+            <!-- Company Info -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-3 flex items-center">
+                    <!-- Office Building Icon -->
+                    <svg class="w-6 h-6 text-gray-600 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 21V3h18v18H3zM9 21V9m6 12V9M9 9h6" />
+                    </svg>
+                    Thông tin công ty
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
+                    <p class="flex items-center">
+                        <!-- Building Icon -->
+                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M9 21V9m6 12V9M9 9h6"/>
+                        </svg>
+                        <span class="font-semibold">Công ty:</span>
+                        <span class="ml-1" th:text="${company.compName}">Tên công ty</span>
+                    </p>
+                    <p class="flex items-center">
+                        <!-- Email Icon -->
+                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 12H8m8 0c0 1.885-1.07 3.5-2.68 4.305m2.68-4.305c0-1.885-1.07-3.5-2.68-4.305M8 12c0-1.885 1.07-3.5 2.68-4.305M8 12c0 1.885 1.07 3.5 2.68 4.305M3 5h18M3 19h18"/>
+                        </svg>
+                        <span class="font-semibold">Email:</span>
+                        <span class="ml-1" th:text="${company.email}">Email công ty</span>
+                    </p>
+                    <p class="flex items-center">
+                        <!-- Phone Icon -->
+                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5h2l3 7a1 1 0 010 1L5 17a2 2 0 002 2h1a2 2 0 002-2v-1l3-3a2 2 0 002 0l1 1a2 2 0 002-2v-1a2 2 0 000-2l-1-1a2 2 0 00-2 0l-3 3V7a2 2 0 00-2-2H7a2 2 0 00-2 2v1H3V5z" />
+                        </svg>
+                        <span class="font-semibold">Số điện thoại:</span>
+                        <span class="ml-1" th:text="${company.phone}">Số điện thoại công ty</span>
+                    </p>
+                    <p class="flex items-center">
+                        <!-- Location Marker Icon -->
+                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c.828 0 1.5-.672 1.5-1.5S12.828 8 12 8s-1.5.672-1.5 1.5S11.172 11 12 11zm0 9c4.418 0 8-3.582 8-8 0-4.07-3.08-7.415-7-7.945V3a1 1 0 00-2 0v1.055C7.08 4.585 4 7.93 4 12c0 4.418 3.582 8 8 8z" />
+                        </svg>
+                        <span class="font-semibold">Địa chỉ:</span>
+                        <span class="ml-1" th:text="${company.address.street} + ', ' + ${company.address.city}">Địa chỉ công ty</span>
+                    </p>
+                </div>
+            </div>
 
-    <!-- Apply Form -->
-    <div class="mt-4">
-        <form th:action="@{/candidates/jobs/{jobId}/apply(jobId=${job.id})}" method="post">
-            <button type="submit" class="btn btn-primary btn-block">Ứng tuyển ngay</button>
-        </form>
-        <a href="/" class="btn btn-secondary btn-block mt-2">Quay lại danh sách công việc</a>
+            <!-- Job Description -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-3 flex items-center">
+                    <!-- Document Text Icon -->
+                    <svg class="w-6 h-6 text-gray-600 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3h8v4m0 0h2a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2m0 0v4"/>
+                    </svg>
+                    Mô tả công việc
+                </h3>
+                <p class="text-gray-600 leading-relaxed" th:text="${job.jobDesc}">Mô tả chi tiết công việc</p>
+            </div>
+
+            <!-- Job Skills -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-3 flex items-center">
+                    <!-- Check Circle Icon -->
+                    <svg class="w-6 h-6 text-gray-600 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4-4M21 12c0 4.971-4.029 9-9 9s-9-4.029-9-9s4.029-9 9-9s9 4.029 9 9z"/>
+                    </svg>
+                    Kỹ năng yêu cầu
+                </h3>
+                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                    <li th:each="skill : ${jobSkills}" class="flex items-center">
+                        <!-- Sparkles Icon -->
+                        <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 4.69l.689 1.572c.157.358.449.624.807.744l1.705.524a.836.836 0 01.464 1.333l-1.101 1.26c-.256.293-.362.689-.29 1.081l.347 1.9a.836.836 0 01-1.265.86L9.001 13.75l-1.642.995a.836.836 0 01-1.265-.86l.347-1.9a1.09 1.09 0 00-.29-1.081l-1.1-1.26a.836.836 0 01.463-1.333l1.705-.524c.358-.12.65-.386.807-.744l.69-1.572a.836.836 0 011.524 0zM20.813 14.69l.689 1.572c.157.358.449.624.807.744l1.705.524a.836.836 0 01.464 1.333l-1.101 1.26c-.256.293-.362.689-.29 1.081l.347 1.9a.836.836 0 01-1.265.86l-1.642-.995-1.642.995a.836.836 0 01-1.265-.86l.347-1.9a1.09 1.09 0 00-.29-1.081l-1.1-1.26a.836.836 0 01.463-1.333l1.705-.524c.358-.12.65-.386.807-.744l.69-1.572a.836.836 0 011.524 0z"/>
+                        </svg>
+                        <span th:text="${skill.skillName}">Tên kỹ năng</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Apply Form -->
+            <div class="mt-8 space-y-4">
+                <form th:action="@{/candidates/jobs/{jobId}/apply(jobId=${job.id})}" method="post">
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 flex items-center justify-center">
+                        <!-- Paper Airplane Icon -->
+                        <svg class="w-6 h-6 text-white mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8l16-5v4l-7 5 7 5v4l-16-5v-8z"/>
+                        </svg>
+                        Ứng tuyển ngay
+                    </button>
+                </form>
+                <a href="/home" class="block text-center bg-gray-200 text-gray-800 py-3 px-6 rounded-lg shadow hover:bg-gray-300 flex items-center justify-center">
+                    <!-- Arrow Left Icon -->
+                    <svg class="w-5 h-5 text-gray-700 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Quay lại danh sách công việc
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

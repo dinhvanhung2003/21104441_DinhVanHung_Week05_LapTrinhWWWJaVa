@@ -34,8 +34,7 @@ dependencies {
     //For database REST
     // DevTools (Tự động reload khi thay đổi code)
     developmentOnly ("org.springframework.boot:spring-boot-devtools")
-
-
+    implementation( "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
     // Spring Boot Starter Mail (Gửi email)
     implementation ("org.springframework.boot:spring-boot-starter-mail")
     implementation ("org.springframework.data:spring-data-rest-core:4.1.4")

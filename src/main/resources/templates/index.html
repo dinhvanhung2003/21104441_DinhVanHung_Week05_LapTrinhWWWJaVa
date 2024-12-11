@@ -1,112 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ - Danh sách công việc</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .job-card {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .job-company-logo img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-        }
-        .job-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #333;
-        }
-        .job-company-name {
-            color: #888;
-        }
-        .job-salary {
-            color: red;
-            font-weight: bold;
-        }
-        .job-location {
-            color: #555;
-            font-size: 0.9rem;
-        }
-        .job-badge {
-            font-size: 0.8rem;
-            color: #fff;
-            background-color: #ff5722;
-            border-radius: 3px;
-            padding: 2px 6px;
-            margin-right: 5px;
-        }
-        .btn-apply {
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            padding: 6px 12px;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trang chủ - Tìm kiếm việc làm</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<!-- Include header -->
+</head>
+<body class="font-sans text-gray-900">
+
+<!-- Header -->
 <div th:replace="~{header.html}"></div>
-<div class="container mt-4">
-    <h2 class="mb-4">Việc Làm Nổi Bật</h2>
-    <div class="row">
-        <div th:each="job : ${jobPage.content}" class="col-md-6 col-lg-4 mb-4">
-            <div class="job-card">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="job-company-logo mr-3">
-<!--                        <img th:src="${job.company.logoUrl}" alt="Logo Công ty" style="width: 60px; height: 60px;">-->
-                    </div>
-                    <div>
-                        <div class="job-title" th:text="${job.jobName}">Tên công việc</div>
-<!--                        <div class="job-company-name" th:text="${job.company.compName}">Tên công ty</div>-->
-                    </div>
-                </div>
-<!--                <p class="job-salary" th:text="'Lương: ' + ${job.salary}">Lương</p>-->
-<!--                <p class="job-location" th:text="${job.location}">Địa điểm</p>-->
-<!--                <p th:text="'Hạn nộp: ' + ${job.deadline}">Hạn nộp</p>-->
-                <div class="mt-3">
-                    <a href="#" class="btn btn-apply">Nộp đơn</a>
-                    <a th:href="@{/jobs/{jobId}(jobId=${job.id})}" class="btn btn-link">Xem chi tiết</a>
-                </div>
+
+<!-- Banner Tìm Việc -->
+<section class="relative bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.careerviet.vn/background/career-start-viec-tot-luong-cao-1900x570_2020_06_02_1591068457.jpg')">
+    <div class="bg-black bg-opacity-50">
+        <div class="container mx-auto px-4 py-16 text-center">
+            <div class="max-w-md mx-auto bg-white bg-opacity-90 rounded-lg p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Đón lấy thành công với
+                    <span class="font-extrabold text-gray-900">25,032</span> cơ hội nghề nghiệp
+                </h3>
+                <form th:action="@{/home}" method="get" class="flex flex-col sm:flex-row items-center gap-2">
+                    <input type="text" name="query" class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none" placeholder="Chức danh" th:value="${query}">
+                    <button type="submit" class="px-5 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700">
+                        Tìm Việc Ngay
+                    </button>
+                </form>
+                <p class="mt-4 text-sm font-semibold text-gray-800">
+                    Đăng hồ sơ nghề nghiệp để dễ dàng ứng tuyển nhanh
+                </p>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Pagination and Sorting Controls -->
-    <nav aria-label="Page navigation example" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${jobPage.hasPrevious()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}">Trước</a>
+<!-- Danh sách công việc -->
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6" th:text="${query != null && !query.isEmpty()} ? 'Kết quả tìm kiếm cho: ' + ${query} : 'Danh sách công việc'"></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="job : ${jobPage.content}" class="bg-white rounded-lg shadow p-6">
+            <div class="text-lg font-bold text-gray-800" th:text="${job.jobName}"></div>
+            <p class="text-sm text-gray-500 mt-2" th:text="${job.company.compName}"></p>
+            <!-- <p class="text-red-600 font-semibold mt-2" th:text="'Lương: ' + ${job.salary}"></p>
+            <p class="text-gray-600 text-sm" th:text="${job.location}"></p> -->
+            <a th:href="@{/jobs/{jobId}(jobId=${job.id})}" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">
+                Xem Chi Tiết
+            </a>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="mt-8 flex justify-center" aria-label="Pagination" th:if="${pageNumbers != null}">
+        <ul class="inline-flex items-center space-x-2">
+            <li th:classappend="${jobPage.hasPrevious()} ? '' : 'opacity-50 pointer-events-none'}">
+                <a th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}"
+                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Trước</a>
             </li>
-            <li class="page-item" th:each="pageNum : ${pageNumbers}" th:classappend="${pageNum == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/home(page=${pageNum - 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${pageNum}">1</a>
+            <li th:each="pageNum : ${pageNumbers}" th:classappend="${pageNum == currentPage} ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'"
+                class="px-3 py-1 rounded hover:bg-gray-300">
+                <a th:href="@{/home(page=${pageNum}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${pageNum}"></a>
             </li>
-            <li class="page-item" th:classappend="${jobPage.hasNext()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/home(page=${currentPage + 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}">Sau</a>
+            <li th:classappend="${jobPage.hasNext()} ? '' : 'opacity-50 pointer-events-none'}">
+                <a th:href="@{/home(page=${currentPage + 1}, size=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}"
+                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Sau</a>
             </li>
         </ul>
     </nav>
 
-    <!-- Sorting Links -->
-    <div class="mt-4 text-center">
-        <a th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField='jobName', sortDir=${reverseSortDir})}">Sort by Job Name</a> |
-        <a th:href="@{/home(page=${currentPage - 1}, size=${pageSize}, sortField='salary', sortDir=${reverseSortDir})}">Sort by Salary</a>
-    </div>
+
+
 </div>
 
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

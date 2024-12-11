@@ -1,5 +1,7 @@
 package vn.edu.iuh.fit.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +26,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Candidate> findCandidatesByJobId(@Param("jobId") Long jobId);
     Optional<Job> findById(Long id);
     List<Job> findByCandidates(Candidate candidate);
+    Page<Job> findByJobNameContainingIgnoreCase(String jobName, Pageable pageable);
+    @Query("SELECT j FROM Job j WHERE LOWER(j.jobName) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(j.company.compName) LIKE LOWER(CONCAT('%', :query, '%'))")
+    Page<Job> searchByJobNameOrCompany(@Param("query") String query, Pageable pageable);
 }
