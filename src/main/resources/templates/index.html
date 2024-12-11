@@ -44,18 +44,39 @@
 
 <!-- Danh sách công việc -->
 <div class="container mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-6" th:text="${query != null && !query.isEmpty()} ? 'Kết quả tìm kiếm cho: ' + ${query} : 'Danh sách công việc'"></h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div th:each="job : ${jobPage.content}" class="bg-white rounded-lg shadow p-6">
-            <div class="text-lg font-bold text-gray-800" th:text="${job.jobName}"></div>
-            <p class="text-sm text-gray-500 mt-2" th:text="${job.company.compName}"></p>
-            <!-- <p class="text-red-600 font-semibold mt-2" th:text="'Lương: ' + ${job.salary}"></p>
-            <p class="text-gray-600 text-sm" th:text="${job.location}"></p> -->
-            <a th:href="@{/jobs/{jobId}(jobId=${job.id})}" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">
-                Xem Chi Tiết
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <!-- Icon tiêu đề -->
+        <i class="fas fa-briefcase text-blue-600"></i>
+        <span th:text="${query != null && !query.isEmpty()} ? 'Kết quả tìm kiếm cho: ' + ${query} : 'Danh sách công việc'"></span>
+    </h2>
+
+    <!-- Danh sách công việc -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="job : ${jobPage.content}" class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-300">
+            <!-- Tên công việc -->
+            <div class="flex items-center gap-2">
+                <i class="fas fa-briefcase text-blue-500"></i>
+                <span class="text-lg font-bold text-gray-800" th:text="${job.jobName}"></span>
+            </div>
+            <!-- Tên công ty -->
+            <p class="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                <i class="fas fa-building text-gray-400"></i>
+                <span th:text="${job.company.compName}"></span>
+            </p>
+            <!-- Thành phố -->
+            <p class="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                <i class="fas fa-map-marker-alt text-red-400"></i>
+                <span th:text="${job.company.address.city}"></span>
+            </p>
+            <!-- Nút Xem Chi Tiết -->
+            <a th:href="@{/jobs/{jobId}(jobId=${job.id})}"
+               class="flex items-center justify-center mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 gap-2 transition-all duration-300">
+                <i class="fas fa-arrow-right"></i> Xem Chi Tiết
             </a>
         </div>
     </div>
+
+
 
     <!-- Pagination -->
     <nav class="mt-8 flex justify-center" aria-label="Pagination" th:if="${pageNumbers != null}">
@@ -85,7 +106,7 @@
 
 </div>
 <!-- Footer -->
-
+<div th:replace="~{footer.html}"></div>
 
 </body>
 </html>

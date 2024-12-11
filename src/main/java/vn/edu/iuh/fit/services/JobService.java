@@ -164,7 +164,8 @@ public class JobService {
     }
 
     public Page<Job> searchJobs(String query, int page, int size) {
-        return jobRepository.searchByJobNameOrCompany(query, PageRequest.of(page, size));
+        Pageable pageable = PageRequest.of(page, size);
+        return jobRepository.findByJobNameContainingIgnoreCase(query, pageable);
     }
 
 }

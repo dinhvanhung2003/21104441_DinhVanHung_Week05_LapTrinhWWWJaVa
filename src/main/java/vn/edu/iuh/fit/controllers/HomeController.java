@@ -37,24 +37,37 @@ public class HomeController {
     private AccountRepository accountRepository;
 
     @GetMapping("/home")
-    public String viewHomePage(Model model,
-                               @RequestParam("page") Optional<Integer> page,
-                               @RequestParam("size") Optional<Integer> size,
-                               @RequestParam("sortField") Optional<String> sortField,
-                               @RequestParam("sortDir") Optional<String> sortDir) {
+    public String viewHomePage(
+            Model model,
+            @RequestParam("query") Optional<String> query, // Tham số tìm kiếm tùy chọn
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size,
+            @RequestParam("sortField") Optional<String> sortField,
+            @RequestParam("sortDir") Optional<String> sortDir) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
         String currentSortField = sortField.orElse("jobName");
         String currentSortDir = sortDir.orElse("asc");
 
-        // Fetch data
-        Page<Job> jobPage = jobService.findAll(currentPage - 1, pageSize, currentSortField, currentSortDir);
+        // Xử lý tìm kiếm hoặc hiển thị tất cả
+        Page<Job> jobPage;
+        String searchQuery = query.orElse(""); // Nếu không có query, để trống
+        if (!searchQuery.isEmpty()) {
+            // Tìm kiếm công việc
+            jobPage = jobService.searchJobs(searchQuery, currentPage - 1, pageSize);
+        } else {
+            // Hiển thị tất cả công việc
+            jobPage = jobService.findAll(currentPage - 1, pageSize, currentSortField, currentSortDir);
+        }
+
+        // Đưa dữ liệu vào model
         model.addAttribute("jobPage", jobPage);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sortField", currentSortField);
         model.addAttribute("sortDir", currentSortDir);
         model.addAttribute("reverseSortDir", currentSortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("query", searchQuery);
 
         // Generate pagination numbers
         int totalPages = jobPage.getTotalPages();
@@ -62,11 +75,15 @@ public class HomeController {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
+
+        // Debug thông tin phân trang
         System.out.println("Total Pages: " + jobPage.getTotalPages());
         System.out.println("Total Elements: " + jobPage.getTotalElements());
+        System.out.println("Search Query: " + searchQuery);
 
         return "index.html";
     }
+
 
 
     @GetMapping("/jobs/{jobId}")
@@ -102,31 +119,7 @@ public class HomeController {
 
         return "home"; // Trang chủ nếu thông tin đã hoàn tất
     }
-    @GetMapping("/search")
-    public String searchJobs(@RequestParam("query") String query,
-                             Model model,
-                             @RequestParam("page") Optional<Integer> page,
-                             @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(10);
 
-        // Call service to get search results
-        Page<Job> jobPage = jobService.searchJobs(query, currentPage - 1, pageSize);
-
-        model.addAttribute("jobPage", jobPage);
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("query", query);
-
-        // Pagination numbers
-        int totalPages = jobPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        return "search-results"; // Returns a search result page
-    }
 
 
 }
