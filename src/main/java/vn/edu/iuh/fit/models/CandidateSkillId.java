@@ -14,7 +14,7 @@ import java.util.Objects;
 @Embeddable
 public class CandidateSkillId implements Serializable {
     private static final long serialVersionUID = -2088150710617185742L;
-    @Column(name = "can_id", nullable = false)
+    @Column(name = "candidate_id", nullable = false)
     private Long canId;
 
     @Column(name = "skill_id", nullable = false)
