@@ -130,13 +130,25 @@ def fetch_candidates_from_db():
     """
     return pd.read_sql(query, engine)
 
+def log_email(candidate_id, job_id, status, message=None):
+    try:
+        with engine.connect() as conn:
+            query = """
+            INSERT INTO email_log (candidate_id, job_id, status, message)
+            VALUES (%s, %s, %s, %s)
+            """
+            conn.execute(query, (candidate_id, job_id, status, message))
+        logging.info(f"Email log inserted: Candidate ID {candidate_id}, Job ID {job_id}, Status {status}")
+    except Exception as e:
+        logging.error(f"Failed to log email: {e}")
+
 
 
 
 @app.route('/evaluate', methods=['POST'])
 def evaluate_candidates():
-    """API đánh giá ứng viên"""
     try:
+        # Lấy dữ liệu công việc và ứng viên từ DB
         logging.info("Fetching jobs and candidates from the database...")
         jobs2 = fetch_jobs_from_db2()
         candidates = fetch_candidates_from_db()
@@ -160,13 +172,17 @@ def evaluate_candidates():
             logging.info(f"Best match for {candidate['full_name']}: {best_match['job_name']} with similarity {best_match['similarity']}")
 
             if best_match["similarity"] > 0.7:
-                send_email(candidate["candidate_email"], best_match["job_name"])
-                invited_candidates.append({
-                    "candidate_id": candidate["candidate_id"],
-                    "candidate_name": candidate["full_name"],
-                    "job_name": best_match["job_name"],
-                    "similarity": best_match["similarity"]
-                })
+                try:
+                    send_email(candidate["email"], best_match["job_name"])
+                    log_email(candidate["candidate_id"], best_match["job_id"], "SUCCESS")
+                    invited_candidates.append({
+                        "candidate_id": candidate["candidate_id"],
+                        "candidate_name": candidate["full_name"],
+                        "job_name": best_match["job_name"],
+                        "similarity": best_match["similarity"]
+                    })
+                except Exception as e:
+                    log_email(candidate["candidate_id"], best_match["job_id"], "FAILURE", str(e))
 
         logging.info("Evaluation completed.")
         return jsonify(invited_candidates)
@@ -174,6 +190,8 @@ def evaluate_candidates():
     except Exception as e:
         logging.error(f"Error in candidate evaluation: {e}")
         return jsonify({"error": "An error occurred during evaluation."}), 500
+
+
 
 
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách ứng viên đã gửi email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            background-color: #007BFF;
+            color: white;
+        }
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Danh sách ứng viên đã gửi email</h1>
+<p th:text="'Công việc ID: ' + ${jobId}"></p>
+
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
+
+<table th:if="${sentEmails}">
+    <thead>
+    <tr>
+        <th>Mã ứng viên</th>
+        <th>Tên ứng viên</th>
+        <th>Công việc</th>
+        <th>Điểm tương đồng</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="candidate : ${sentEmails}">
+        <td th:text="${candidate['candidate_id']}"></td>
+        <td th:text="${candidate['candidate_name']}"></td>
+        <td th:text="${candidate['job_name']}"></td>
+        <td th:text="${#numbers.formatDecimal(candidate['similarity'], 2, 2)}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
