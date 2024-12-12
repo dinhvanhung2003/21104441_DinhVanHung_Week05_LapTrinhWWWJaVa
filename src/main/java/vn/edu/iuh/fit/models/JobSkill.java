@@ -19,8 +19,7 @@ public class JobSkill {
     private vn.edu.iuh.fit.models.Job job;
 
     @Column(name = "more_infos", length = 1000)
-    private String moreInfos;
-    @Column(name = "skill_level", nullable = false)
+    private String moreInfos;    @Column(name = "skill_level", nullable = false)
     @Enumerated(EnumType.STRING) // Stores enum as String in the database
     private SkillLevelType skillLevel;
     @MapsId("skillId")

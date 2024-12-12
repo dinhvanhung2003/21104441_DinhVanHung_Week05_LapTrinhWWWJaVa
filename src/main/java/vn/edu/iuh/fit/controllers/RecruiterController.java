@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.edu.iuh.fit.models.Company;
 import vn.edu.iuh.fit.models.Job;
 import vn.edu.iuh.fit.models.Candidate;
 import vn.edu.iuh.fit.services.CandidateService;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/recruiter/jobs")
+@RequestMapping("/recruiter")
 public class RecruiterController {
 
     @Autowired
@@ -25,7 +26,7 @@ public class RecruiterController {
     private CandidateService candidateService;
 
     // Trang quản lý công việc
-    @GetMapping
+    @GetMapping("dashboard/jobs")
     public String listJobs(Model model, Principal principal) {
         String recruiterUsername = principal.getName(); // Lấy username nhà tuyển dụng
         List<Job> jobs = jobService.getJobsByRecruiterUsername(recruiterUsername); // Lấy công việc theo username
@@ -41,7 +42,7 @@ public class RecruiterController {
     }
 
 
-    @GetMapping("/{jobId}/candidates")
+    @GetMapping("dashboard/{jobId}/candidates")
     public String listCandidates(@PathVariable Long jobId, Model model, Principal principal) {
         // Lấy thông tin công việc
         Optional<Job> job = jobService.findJobById(jobId);
@@ -80,6 +81,18 @@ public String evaluateAllCandidates(@PathVariable Long jobId, RedirectAttributes
 //    redirectAttributes.addFlashAttribute("message", resultMessage);
     return "recruiter/evaluation-result";
 }
+    // Trang Dashboard của nhà tuyển dụng
+    @GetMapping("/dashboard")
+    public String viewDashboard(Model model, Principal principal) {
+        String recruiterUsername = principal.getName(); // Lấy username của nhà tuyển dụng
+//        Company company = accountService.getCompanyByRecruiterUsername(recruiterUsername); // Lấy thông tin công ty
+        List<Job> jobs = jobService.getJobsByRecruiterUsername(recruiterUsername); // Lấy danh sách công việc
 
+        // Đưa dữ liệu vào model
+        model.addAttribute("recruiterUsername", recruiterUsername);
+//        model.addAttribute("company", company);
+        model.addAttribute("jobs", jobs);
 
+        return "recruiter/dashboard"; // Trả về trang Dashboard
+    }
 }

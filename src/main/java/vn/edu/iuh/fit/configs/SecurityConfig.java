@@ -58,11 +58,19 @@ public class SecurityConfig {
                             Long accountIdFromSession = (Long) session.getAttribute("accountId");
                             System.out.println("Retrieved accountId from session: " + accountIdFromSession);
                             // Chuyển hướng dựa trên trạng thái tài khoản
-                            if (account.getCandidate() == null) {
-                                response.sendRedirect("/candidates/register/full-info");
+                            if (account.getRole() != null && account.getRole().getRoleName().equals("ROLE_CANDIDATE")) {
+                                if (account.getCandidate() == null) {
+                                    response.sendRedirect("/candidates/register/full-info");
+                                } else {
+                                    response.sendRedirect("/candidates/dashboard");
+                                }
+                            } else if (account.getRole() != null && account.getRole().getRoleName().equals("ROLE_RECRUITER")) {
+                                response.sendRedirect("/recruiter/dashboard");
                             } else {
                                 response.sendRedirect("/home");
                             }
+
+
                         })
                         .failureUrl("/login?error=true")
                         .permitAll()
