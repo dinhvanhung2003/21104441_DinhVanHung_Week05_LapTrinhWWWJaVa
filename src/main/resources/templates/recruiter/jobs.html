@@ -110,7 +110,8 @@
 <!--            <td th:text="${job.description}">Chi tiết công việc</td>-->
 <!--            <td th:text="${job.createdAt}">2024-12-05</td>-->
             <td>
-                <a th:href="@{/recruiter/jobs/{jobId}/candidates(jobId=${job.id})}" class="btn-view">Xem ứng viên</a>
+                <a th:href="@{/recruiter/dashboard/jobs/{jobId}/candidates(jobId=${job.id})}" class="btn-view">Xem ứng viên</a>
+
             </td>
         </tr>
         </tbody>

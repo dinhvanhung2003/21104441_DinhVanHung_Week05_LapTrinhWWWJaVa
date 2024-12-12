@@ -42,7 +42,7 @@ public class RecruiterController {
     }
 
 
-    @GetMapping("dashboard/{jobId}/candidates")
+    @GetMapping("dashboard/jobs/{jobId}/candidates")
     public String listCandidates(@PathVariable Long jobId, Model model, Principal principal) {
         // Lấy thông tin công việc
         Optional<Job> job = jobService.findJobById(jobId);
