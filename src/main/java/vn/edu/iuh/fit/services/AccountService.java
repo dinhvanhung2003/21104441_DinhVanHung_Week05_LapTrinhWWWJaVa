@@ -8,6 +8,8 @@ import vn.edu.iuh.fit.models.Candidate;
 import vn.edu.iuh.fit.models.Role;
 import vn.edu.iuh.fit.repositories.AccountRepository;
 
+import java.util.Optional;
+
 @Service
 public class AccountService {
     @Autowired
@@ -25,8 +27,8 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public Account findByUsername(String username) {
-        return accountRepository.findByUsername(username).orElse(null);
+    public Optional<Account> findByUsername(String username) {
+        return accountRepository.findByUsername(username);
     }
 }
 

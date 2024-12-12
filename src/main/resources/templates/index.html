@@ -39,9 +39,40 @@
                 </p>
             </div>
         </div>
-    </div>
+    </div>!
+
 </section>
 
+<!-- Thêm phần hiển thị công việc được gợi ý -->
+<section class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <i class="fas fa-lightbulb text-yellow-500"></i> Công Việc Được Gợi Ý
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="job : ${suggestedJobs}" class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-briefcase text-blue-500"></i>
+                <span class="text-lg font-bold text-gray-800" th:text="${job.jobName}"></span>
+            </div>
+            <!-- Tên công ty -->
+            <p class="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                <i class="fas fa-building text-gray-400"></i>
+                <span th:text="${job.company.compName}"></span>
+            </p>
+            <!-- Thành phố -->
+            <p class="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                <i class="fas fa-map-marker-alt text-red-400"></i>
+                <span th:text="${job.company.address.city}"></span>
+            </p>
+            <!-- Nút Xem Chi Tiết -->
+            <a th:href="@{/jobs/{jobId}(jobId=${job.id})}"
+               class="flex items-center justify-center mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 gap-2 transition-all duration-300">
+                <i class="fas fa-arrow-right"></i> Xem Chi Tiết
+            </a>
+        </div>
+    </div>
+</section>
 <!-- Danh sách công việc -->
 <div class="container mx-auto px-4 py-8">
     <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">

@@ -32,4 +32,5 @@ public class Account {
     @JoinColumn(name = "company_id")
     private Company company;
 
+
 }
