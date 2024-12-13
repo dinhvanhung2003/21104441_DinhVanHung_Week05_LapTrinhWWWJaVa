@@ -100,7 +100,7 @@ public String evaluateAllCandidates(@PathVariable Long jobId, Model model) {
         );
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            List<Map<String, Object>> sentEmails = response.getBody();
+            List sentEmails = response.getBody();
             model.addAttribute("sentEmails", sentEmails);
             model.addAttribute("jobId", jobId);
         } else {
@@ -146,6 +146,12 @@ public String evaluateAllCandidates(@PathVariable Long jobId, Model model) {
 
         return "recruiter/sentEmails";
     }
-
+    // Lưu công việc mới
+    @PostMapping("/jobs")
+    public String saveJob(@ModelAttribute("job") Job job) {
+         // Đặt ngày tạo
+        jobService.saveJob(job);
+        return "redirect:/recruiter/jobs";
+    }
 
 }
