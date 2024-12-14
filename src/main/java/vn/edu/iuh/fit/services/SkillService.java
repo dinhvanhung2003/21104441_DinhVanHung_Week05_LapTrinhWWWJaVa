@@ -15,4 +15,7 @@ public class SkillService {
         return skillRepository.findAll();
 
     }
+    public Skill save(Skill skill) {
+        return skillRepository.save(skill);
+    }
 }

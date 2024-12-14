@@ -1,21 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm công việc</title>
+    <title>Thêm Công Việc</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, textarea, select, button {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .skills-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .skills-section .skill-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .btn-remove-skill {
+            background-color: #dc3545;
+            color: white;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-remove-skill:hover {
+            background-color: #c82333;
+        }
+    </style>
+    <script>
+        function addSkillField() {
+            const skillsContainer = document.getElementById('skillsContainer');
+            const skillItem = document.createElement('div');
+            skillItem.classList.add('skill-item');
+
+            skillItem.innerHTML = `
+        <label for="skillName">Tên Kỹ Năng:</label>
+        <input type="text" name="skillName[]" placeholder="Nhập tên kỹ năng" required>
+
+        <label for="skillType">Loại Kỹ Năng:</label>
+        <select name="skillType[]" required>
+            <option value="SOFT_SKILL">Kỹ năng mềm</option>
+            <option value="TECHNICAL_SKILL">Kỹ năng kỹ thuật</option>
+            <option value="UNSPECIFIC">Không xác định</option>
+        </select>
+
+        <label for="skillDesc">Mô Tả Kỹ Năng:</label>
+        <textarea name="skillDesc[]" rows="3" placeholder="Nhập mô tả kỹ năng" required></textarea>
+
+        <label for="skillLevel">Mức Độ Kỹ Năng:</label>
+        <select name="skillLevel[]" required>
+            <option value="BEGINNER">BEGINNER</option>
+            <option value="INTERMEDIATE">INTERMEDIATE</option>
+            <option value="ADVANCED">ADVANCED</option>
+            <option value="PROFESSIONAL">PROFESSIONAL</option>
+            <option value="EXPERT">EXPERT</option>
+        </select>
+
+        <label for="moreInfos">Thông Tin Thêm:</label>
+        <textarea name="moreInfos[]" rows="3" placeholder="Nhập thông tin thêm"></textarea>
+
+        <button type="button" class="btn-remove-skill" onclick="removeSkillField(this)">Xóa Kỹ Năng</button>
+    `;
+            skillsContainer.appendChild(skillItem);
+        }
+
+        function removeSkillField(button) {
+            const skillItem = button.parentElement;
+            skillItem.remove();
+        }
+
+    </script>
 </head>
 <body>
-<h1>Thêm công việc mới</h1>
-<form action="/recruiter/jobs/new" method="post">
-    <label for="title">Tiêu đề:</label>
-    <input type="text" id="title" name="title" required>
-    <br>
-    <label for="description">Mô tả:</label>
-    <textarea id="description" name="description" required></textarea>
-    <br>
-    <button type="submit">Thêm công việc</button>
-</form>
-<a href="/recruiter/jobs">Quay lại</a>
+<header>
+    <h1>Thêm Công Việc Mới</h1>
+</header>
+<main>
+    <form th:action="@{/recruiter/dashboard/jobs/new}" method="post">
+        <!-- Nhập tên công việc -->
+        <label for="jobName">Tên Công Việc:</label>
+        <input type="text" id="jobName" name="jobName" placeholder="Nhập tên công việc" required
+               th:value="${job?.jobName}">
+
+        <!-- Mô tả công việc -->
+        <label for="jobDesc">Mô Tả Công Việc:</label>
+        <textarea id="jobDesc" name="jobDesc" rows="4" placeholder="Nhập mô tả công việc" required
+                  th:text="${job?.jobDesc}"></textarea>
+
+        <!-- Kỹ năng -->
+        <label>Kỹ Năng:</label>
+        <div id="skillsContainer" class="skills-section">
+            <!-- Thymeleaf loop for existing skills -->
+            <div th:each="skill, iterStat : ${jobSkills}" class="skill-item">
+                <!-- Unique IDs using Thymeleaf -->
+                <label th:for="'skillName-' + ${iterStat.index}">Tên Kỹ Năng:</label>
+                <input type="text" th:id="'skillName-' + ${iterStat.index}" th:name="skillName[]" placeholder="Nhập tên kỹ năng" th:value="${skill.skillName}" required>
+
+                <label th:for="'skillType-' + ${iterStat.index}">Loại Kỹ Năng:</label>
+                <select th:id="'skillType-' + ${iterStat.index}" th:name="skillType[]" required>
+                    <option th:each="type : ${skillTypes}" th:value="${type}" th:text="${type}"></option>
+                </select>
+
+                <label th:for="'skillDesc-' + ${iterStat.index}">Mô Tả Kỹ Năng:</label>
+                <textarea th:id="'skillDesc-' + ${iterStat.index}" th:name="skillDesc[]" rows="3" placeholder="Nhập mô tả kỹ năng" th:text="${skill.skillDesc}" required></textarea>
+
+                <label th:for="'skillLevel-' + ${iterStat.index}">Mức Độ Kỹ Năng:</label>
+                <select th:id="'skillLevel-' + ${iterStat.index}" th:name="skillLevel[]" required>
+                    <option th:each="level : ${skillLevels}" th:value="${level}" th:text="${level}"></option>
+                </select>
+
+                <label th:for="'moreInfos-' + ${iterStat.index}">Thông Tin Thêm:</label>
+                <textarea th:id="'moreInfos-' + ${iterStat.index}" th:name="moreInfos[]" rows="3" placeholder="Nhập thông tin thêm" th:text="${skill.moreInfo}"></textarea>
+
+                <button type="button" class="btn-remove-skill" onclick="removeSkillField(this)">Xóa Kỹ Năng</button>
+            </div>
+
+        </div>
+        <button type="button" onclick="addSkillField()">+ Thêm Kỹ Năng</button>
+
+        <!-- CSRF -->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+        <!-- Nút gửi -->
+        <button type="submit">Thêm Công Việc</button>
+    </form>
+    <a th:href="@{/recruiter/dashboard/jobs}" class="back-link">Quay lại</a>
+</main>
 </body>
 </html>

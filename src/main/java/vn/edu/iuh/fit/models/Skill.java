@@ -21,6 +21,6 @@ public class Skill {
     @Column(name = "skill_name")
     private String skillName;
     @Column(name = "skill_type", nullable = false)
-    @Enumerated(EnumType.STRING) // Stores enum as String in the database
-    private SkillType type;
+    @Enumerated(EnumType.STRING)
+    private SkillType type = SkillType.SOFT_SKILL;
 }

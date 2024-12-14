@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ admin truy cập
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER") // Chỉ nhà tuyển dụng truy cập
                         .requestMatchers("/candidates/**").hasRole("CANDIDATE") // Chỉ ứng viên truy cập
+                        .requestMatchers("/dashboard/jobs/new").permitAll()
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các request khác
                 )
                 .formLogin(form -> form

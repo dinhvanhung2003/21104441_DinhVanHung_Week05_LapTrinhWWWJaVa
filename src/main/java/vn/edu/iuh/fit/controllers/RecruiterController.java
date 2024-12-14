@@ -1,20 +1,19 @@
 package vn.edu.iuh.fit.controllers;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.edu.iuh.fit.models.Company;
-import vn.edu.iuh.fit.models.EmailLog;
-import vn.edu.iuh.fit.models.Job;
-import vn.edu.iuh.fit.models.Candidate;
-import vn.edu.iuh.fit.services.CandidateService;
-import vn.edu.iuh.fit.services.EmailLogService;
-import vn.edu.iuh.fit.services.JobService;
+import vn.edu.iuh.fit.enums.SkillLevelType;
+import vn.edu.iuh.fit.enums.SkillType;
+import vn.edu.iuh.fit.models.*;
+import vn.edu.iuh.fit.services.*;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -34,6 +33,12 @@ public class RecruiterController {
     private RestTemplate restTemplate;
     @Autowired
     private EmailLogService emailLogService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private SkillService skillService;
+    @Autowired
+    private JobSkillService jobSkillService;
     // Trang quản lý công việc
     @GetMapping("dashboard/jobs")
     public String listJobs(Model model, Principal principal) {
@@ -42,15 +47,6 @@ public class RecruiterController {
         model.addAttribute("jobs", jobs);
         return "recruiter/jobs";
     }
-
-    // Trang thêm job
-    @GetMapping("/new")
-    public String newJobForm(Model model) {
-        model.addAttribute("job", new Job());
-        return "recruiter/new-job";
-    }
-
-
     @GetMapping("dashboard/jobs/{jobId}/candidates")
     public String listCandidates(@PathVariable Long jobId, Model model, Principal principal) {
         // Lấy thông tin công việc
@@ -147,11 +143,98 @@ public String evaluateAllCandidates(@PathVariable Long jobId, Model model) {
         return "recruiter/sentEmails";
     }
     // Lưu công việc mới
-    @PostMapping("/jobs")
-    public String saveJob(@ModelAttribute("job") Job job) {
-         // Đặt ngày tạo
-        jobService.saveJob(job);
-        return "redirect:/recruiter/jobs";
+    @GetMapping("/dashboard/jobs/new")
+    public String showJobForm(Model model, Principal principal) {
+        // Lấy thông tin tài khoản hiện tại
+        String username = principal.getName();
+
+        // Tìm Account dựa trên username
+        Optional<Account> account = accountService.findByUsername(username);
+        // Lấy công ty liên kết với tài khoản hiện tại
+        Company currentCompany = account.get().getCompany();
+
+        // Tạo đối tượng Job và gán công ty
+        Job job = new Job();
+        job.setCompany(currentCompany);
+
+        model.addAttribute("job", job);
+
+        // Danh sách các giá trị Enum SkillLevelType
+        model.addAttribute("skillLevels", List.of(
+                SkillLevelType.BEGINNER,
+                SkillLevelType.INTERMEDIATE,
+                SkillLevelType.ADVANCED,
+                SkillLevelType.PROFESSIONAL,
+                SkillLevelType.EXPERT
+        ));
+
+        // Danh sách các giá trị Enum SkillType
+        model.addAttribute("skillTypes", List.of(
+                SkillType.SOFT_SKILL,
+                SkillType.UNSPECIFIC,
+                SkillType.TECHNICAL_SKILL
+        ));
+
+        return "recruiter/new-job";
     }
+
+    @PostMapping("/dashboard/jobs/new")
+    public String saveJob(
+            Principal principal,
+            @ModelAttribute Job job,
+            @RequestParam("skillName[]") List<String> skillNames,
+            @RequestParam("skillType[]") List<SkillType> skillTypes,
+            @RequestParam("skillDesc[]") List<String> skillDescs,
+            @RequestParam("skillLevel[]") List<SkillLevelType> skillLevels,
+            @RequestParam("moreInfos[]") List<String> moreInfos,
+            HttpSession session) {
+
+        // Lấy accountId từ session
+        Long accountId = (Long) session.getAttribute("accountId");
+        if (accountId == null) {
+            throw new IllegalStateException("Không tìm thấy accountId trong session.");
+        }
+
+        // Lấy thông tin Account từ accountId
+        Optional<Account> accountOpt = accountService.findByUsername(principal.getName());
+        if (accountOpt.isEmpty()) {
+            throw new IllegalStateException("Không tìm thấy tài khoản.");
+        }
+
+        Account account = accountOpt.get();
+        Company currentCompany = account.getCompany();
+        if (currentCompany == null) {
+            throw new IllegalStateException("Tài khoản không liên kết với công ty.");
+        }
+
+        // Gán công ty cho công việc
+        job.setCompany(currentCompany);
+
+        // Lưu Job vào cơ sở dữ liệu
+        jobService.saveJob(job);
+
+        // Xử lý và lưu từng kỹ năng
+        for (int i = 0; i < skillNames.size(); i++) {
+            Skill skill = new Skill();
+            skill.setSkillName(skillNames.get(i));
+            skill.setSkillDescription(skillDescs.get(i));
+            skill.setType(skillTypes.get(i)); // Assign a valid SkillType value
+            skillService.save(skill);
+
+            JobSkill jobSkill = new JobSkill();
+            jobSkill.setJob(job);
+            jobSkill.setSkill(skill);
+            jobSkill.setSkillLevel(skillLevels.get(i));
+            jobSkill.setMoreInfos(moreInfos.get(i));
+            jobSkillService.save(jobSkill);
+        }
+
+
+        return "redirect:/dashboard/jobs";
+    }
+
+
+
+
 
 }

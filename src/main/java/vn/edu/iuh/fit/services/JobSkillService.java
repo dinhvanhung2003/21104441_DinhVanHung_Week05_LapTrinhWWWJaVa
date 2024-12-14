@@ -15,4 +15,8 @@ public class JobSkillService {
     public List<JobSkill> findSkillsByJobId(Long jobId) {
         return jobSkillRepository.findByIdJobId(jobId);
     }
+    // Hàm lưu JobSkill vào cơ sở dữ liệu
+    public JobSkill save(JobSkill jobSkill) {
+        return jobSkillRepository.save(jobSkill);
+    }
 }
