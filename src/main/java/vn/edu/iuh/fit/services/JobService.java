@@ -167,5 +167,16 @@ public class JobService {
         Pageable pageable = PageRequest.of(page, size);
         return jobRepository.findByJobNameContainingIgnoreCase(query, pageable);
     }
+    public List<Job> findByJobNameContaining(String name) {
+        return jobRepository.findByJobNameContainingIgnoreCaseAndCompanyId(name, getCurrentCompanyId());
+    }
 
+    public List<Job> findAllByCompany(Long companyId) {
+        return jobRepository.findByCompanyId(companyId);
+    }
+
+    private Long getCurrentCompanyId() {
+        // Logic lấy ID công ty hiện tại từ session hoặc user đăng nhập
+        return 1L; // Ví dụ: Công ty ID 1
+    }
 }

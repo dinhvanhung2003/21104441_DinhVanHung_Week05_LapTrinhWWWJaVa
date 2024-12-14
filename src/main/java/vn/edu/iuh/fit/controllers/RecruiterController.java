@@ -41,9 +41,16 @@ public class RecruiterController {
     private JobSkillService jobSkillService;
     // Trang quản lý công việc
     @GetMapping("dashboard/jobs")
-    public String listJobs(Model model, Principal principal) {
+    public String listJobs(Model model, Principal principal,String search) {
         String recruiterUsername = principal.getName(); // Lấy username nhà tuyển dụng
-        List<Job> jobs = jobService.getJobsByRecruiterUsername(recruiterUsername); // Lấy công việc theo username
+        List<Job> jobs;
+        if (search != null && !search.isEmpty()) {
+            // Lấy danh sách công việc theo tên công việc
+            jobs = jobService.findByJobNameContaining(search);
+        } else {
+            jobs = jobService.getJobsByRecruiterUsername(recruiterUsername);
+
+        }
         model.addAttribute("jobs", jobs);
         return "recruiter/jobs";
     }

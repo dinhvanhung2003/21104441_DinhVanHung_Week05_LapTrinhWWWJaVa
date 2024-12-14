@@ -32,4 +32,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Page<Job> searchByJobNameOrCompany(@Param("query") String query, Pageable pageable);
     Page<Job> findAll(Pageable pageable);
 
+    List<Job> findByJobNameContainingIgnoreCaseAndCompanyId(String name, Long companyId);
+
+
 }

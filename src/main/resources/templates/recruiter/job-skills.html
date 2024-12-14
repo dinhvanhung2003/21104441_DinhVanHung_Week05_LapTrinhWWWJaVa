@@ -45,6 +45,8 @@
         <th>Tên Kỹ Năng</th>
         <th>Mô Tả Kỹ Năng</th>
         <th>Cấp Độ</th>
+        <th>Loại kỹ năng</th>
+        <th>Thông tin thêm</th>
     </tr>
     </thead>
     <tbody>
@@ -53,6 +55,7 @@
         <td th:text="${jobSkill.skill.skillName}">Kỹ Năng A</td>
         <td th:text="${jobSkill.skill.skillDescription}">Mô Tả A</td>
         <td th:text="${jobSkill.skillLevel}">Intermediate</td>
+        <td th:text="${jobSkill.skill.type}">Không xác định</td>
     </tr>
     </tbody>
 </table>
