@@ -232,6 +232,13 @@ public String evaluateAllCandidates(@PathVariable Long jobId, Model model) {
 
         return "redirect:/dashboard/jobs";
     }
+    @GetMapping("/dashboard/jobs/{jobId}/skills")
+    public String viewSkills(@PathVariable Long jobId, Model model) {
+
+        List<JobSkill> jobSkills = jobSkillService.findSkillsByJobId(jobId);
+        model.addAttribute("jobSkills", jobSkills);
+        return "recruiter/job-skills"; // Trả về template job-skills.html
+    }
 
 
 

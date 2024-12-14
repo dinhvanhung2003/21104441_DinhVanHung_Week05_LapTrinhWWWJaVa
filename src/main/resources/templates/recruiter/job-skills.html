@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Kỹ Năng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7fc;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>Danh Sách Kỹ Năng</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên Kỹ Năng</th>
+        <th>Mô Tả Kỹ Năng</th>
+        <th>Cấp Độ</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="jobSkill : ${jobSkills}">
+        <td th:text="${jobSkill.skill.id}">1</td>
+        <td th:text="${jobSkill.skill.skillName}">Kỹ Năng A</td>
+        <td th:text="${jobSkill.skill.skillDescription}">Mô Tả A</td>
+        <td th:text="${jobSkill.skillLevel}">Intermediate</td>
+    </tr>
+    </tbody>
+</table>
+<a href="/recruiter/dashboard/jobs" style="margin-top: 20px; display: block;">Quay lại danh sách công việc</a>
+</body>
+</html>

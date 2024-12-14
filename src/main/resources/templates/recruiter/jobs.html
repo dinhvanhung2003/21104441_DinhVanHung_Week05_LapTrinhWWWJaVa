@@ -128,7 +128,7 @@
             <th>Mô Tả</th>
             <th>Danh Sách Ứng Viên</th>
 <!--            <th>Ngày Đăng</th>-->
-            <th>Hành Động</th>
+            <th>Hành động</th>
         </tr>
         </thead>
         <tbody>
@@ -142,8 +142,8 @@
             </td>
 <!--            <td th:text="${job.createdAt}">2024-12-13</td>-->
             <td>
-                <a href="#" class="btn-view">Chỉnh Sửa</a>
-            </td>
+                <a th:href="@{/recruiter/dashboard/jobs/{jobId}/skills(jobId=${job.id})}" class="btn-view">Xem Kỹ Năng</a>
+            </td> <!-- Thêm nút Xem Kỹ Năng -->
         </tr>
         </tbody>
     </table>
