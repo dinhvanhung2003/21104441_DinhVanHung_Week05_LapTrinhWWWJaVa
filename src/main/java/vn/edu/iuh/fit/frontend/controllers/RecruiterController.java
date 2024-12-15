@@ -126,12 +126,10 @@ public String evaluateAllCandidates(@PathVariable Long jobId, RedirectAttributes
     @GetMapping("/dashboard")
     public String viewDashboard(Model model, Principal principal) {
         String recruiterUsername = principal.getName(); // Lấy username của nhà tuyển dụng
-//        Company company = accountService.getCompanyByRecruiterUsername(recruiterUsername); // Lấy thông tin công ty
         List<Job> jobs = jobService.getJobsByRecruiterUsername(recruiterUsername); // Lấy danh sách công việc
 
         // Đưa dữ liệu vào model
         model.addAttribute("recruiterUsername", recruiterUsername);
-//        model.addAttribute("company", company);
         model.addAttribute("jobs", jobs);
 
         return "recruiter/dashboard"; // Trả về trang Dashboard

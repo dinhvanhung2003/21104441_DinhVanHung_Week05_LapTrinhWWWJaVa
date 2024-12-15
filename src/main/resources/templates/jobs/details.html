@@ -100,21 +100,21 @@
                     </svg>
                     Kỹ năng yêu cầu
                 </h3>
-                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                    <li th:each="jobSkill : ${jobSkills}" class="flex flex-col mb-4">
-        <span>
-            <strong>Tên kỹ năng:</strong> <span th:text="${jobSkill.skill.skillName}">Tên kỹ năng</span>
-        </span>
-                        <span>
-            <strong>Loại kỹ năng:</strong> <span th:text="${jobSkill.skill.type}">Loại kỹ năng</span>
-        </span>
-                        <span>
-            <strong>Trình độ:</strong> <span th:text="${jobSkill.skillLevel}">Trình độ</span>
-        </span>
+                <ul class="list-none text-gray-600 space-y-4">
+                    <li th:each="jobSkill : ${jobSkills}" class="flex items-start space-x-3">
+                        <!-- Icon kỹ năng -->
+                        <svg class="w-6 h-6 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4-4M21 12c0 4.971-4.029 9-9 9s-9-4.029-9-9s4.029-9 9-9s9 4.029 9 9z"/>
+                        </svg>
+                        <div>
+                            <p><strong>Tên kỹ năng:</strong> <span th:text="${jobSkill.skill.skillName}">Tên kỹ năng</span></p>
+                            <p><strong>Loại kỹ năng:</strong> <span th:text="${jobSkill.skill.type}">Loại kỹ năng</span></p>
+                            <p><strong>Trình độ:</strong> <span th:text="${jobSkill.skillLevel}">Trình độ</span></p>
+                        </div>
                     </li>
                 </ul>
-
             </div>
+
 
             <!-- Apply Form -->
             <div class="mt-8 space-y-4">
