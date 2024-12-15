@@ -41,7 +41,7 @@ public class RegisterController {
             }
 
             // Check if username already exists
-            if (accountService.findByUsername(account.getUsername()) != null) {
+            if (accountService.findByUsername(account.getUsername()).isPresent()) {
                 model.addAttribute("error", "Tên đăng nhập đã tồn tại");
                 return "register";
             }
