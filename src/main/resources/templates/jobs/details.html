@@ -101,14 +101,19 @@
                     Kỹ năng yêu cầu
                 </h3>
                 <ul class="list-disc list-inside text-gray-600 space-y-2">
-                    <li th:each="skill : ${jobSkills}" class="flex items-center">
-                        <!-- Sparkles Icon -->
-                        <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 4.69l.689 1.572c.157.358.449.624.807.744l1.705.524a.836.836 0 01.464 1.333l-1.101 1.26c-.256.293-.362.689-.29 1.081l.347 1.9a.836.836 0 01-1.265.86L9.001 13.75l-1.642.995a.836.836 0 01-1.265-.86l.347-1.9a1.09 1.09 0 00-.29-1.081l-1.1-1.26a.836.836 0 01.463-1.333l1.705-.524c.358-.12.65-.386.807-.744l.69-1.572a.836.836 0 011.524 0zM20.813 14.69l.689 1.572c.157.358.449.624.807.744l1.705.524a.836.836 0 01.464 1.333l-1.101 1.26c-.256.293-.362.689-.29 1.081l.347 1.9a.836.836 0 01-1.265.86l-1.642-.995-1.642.995a.836.836 0 01-1.265-.86l.347-1.9a1.09 1.09 0 00-.29-1.081l-1.1-1.26a.836.836 0 01.463-1.333l1.705-.524c.358-.12.65-.386.807-.744l.69-1.572a.836.836 0 011.524 0z"/>
-                        </svg>
-                        <span th:text="${skill.skillName}">Tên kỹ năng</span>
+                    <li th:each="jobSkill : ${jobSkills}" class="flex flex-col mb-4">
+        <span>
+            <strong>Tên kỹ năng:</strong> <span th:text="${jobSkill.skill.skillName}">Tên kỹ năng</span>
+        </span>
+                        <span>
+            <strong>Loại kỹ năng:</strong> <span th:text="${jobSkill.skill.type}">Loại kỹ năng</span>
+        </span>
+                        <span>
+            <strong>Trình độ:</strong> <span th:text="${jobSkill.skillLevel}">Trình độ</span>
+        </span>
                     </li>
                 </ul>
+
             </div>
 
             <!-- Apply Form -->

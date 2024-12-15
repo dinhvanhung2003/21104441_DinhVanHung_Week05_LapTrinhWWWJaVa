@@ -135,7 +135,7 @@ public class HomeController {
         model.addAttribute("company", company);
         model.addAttribute("jobSkills", jobSkills);
 
-        return "jobs/details.html"; // Chuyển đến trang chi tiết công việc
+        return "jobs/details"; // Chuyển đến trang chi tiết công việc
     }
 
     @GetMapping("/home/check")
