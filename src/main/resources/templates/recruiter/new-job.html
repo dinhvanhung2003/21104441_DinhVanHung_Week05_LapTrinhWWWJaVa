@@ -102,6 +102,24 @@
         .btn-remove-skill:hover {
             background-color: #c82333;
         }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
     <script>
         function addSkillField() {
@@ -110,33 +128,33 @@
             skillItem.classList.add('skill-item');
 
             skillItem.innerHTML = `
-        <label for="skillName">Tên Kỹ Năng:</label>
-        <input type="text" name="skillName[]" placeholder="Nhập tên kỹ năng" required>
+                <label for="skillName">Tên Kỹ Năng:</label>
+                <input type="text" name="skillName[]" placeholder="Nhập tên kỹ năng" required>
 
-        <label for="skillType">Loại Kỹ Năng:</label>
-        <select name="skillType[]" required>
-            <option value="SOFT_SKILL">Kỹ năng mềm</option>
-            <option value="TECHNICAL_SKILL">Kỹ năng kỹ thuật</option>
-            <option value="UNSPECIFIC">Không xác định</option>
-        </select>
+                <label for="skillType">Loại Kỹ Năng:</label>
+                <select name="skillType[]" required>
+                    <option value="SOFT_SKILL">Kỹ năng mềm</option>
+                    <option value="TECHNICAL_SKILL">Kỹ năng kỹ thuật</option>
+                    <option value="UNSPECIFIC">Không xác định</option>
+                </select>
 
-        <label for="skillDesc">Mô Tả Kỹ Năng:</label>
-        <textarea name="skillDesc[]" rows="3" placeholder="Nhập mô tả kỹ năng" required></textarea>
+                <label for="skillDesc">Mô Tả Kỹ Năng:</label>
+                <textarea name="skillDesc[]" rows="3" placeholder="Nhập mô tả kỹ năng" required></textarea>
 
-        <label for="skillLevel">Mức Độ Kỹ Năng:</label>
-        <select name="skillLevel[]" required>
-            <option value="BEGINNER">BEGINNER</option>
-            <option value="INTERMEDIATE">INTERMEDIATE</option>
-            <option value="ADVANCED">ADVANCED</option>
-            <option value="PROFESSIONAL">PROFESSIONAL</option>
-            <option value="EXPERT">EXPERT</option>
-        </select>
+                <label for="skillLevel">Mức Độ Kỹ Năng:</label>
+<select name="skillLevel[]" required>
+    <option value="1">BEGINNER</option>
+    <option value="2">INTERMEDIATE</option>
+    <option value="3">ADVANCED</option>
+    <option value="4">PROFESSIONAL</option>
+    <option value="5">EXPERT</option>
+</select>
 
-        <label for="moreInfos">Thông Tin Thêm:</label>
-        <textarea name="moreInfos[]" rows="3" placeholder="Nhập thông tin thêm"></textarea>
+                <label for="moreInfos">Thông Tin Thêm:</label>
+                <textarea name="moreInfos[]" rows="3" placeholder="Nhập thông tin thêm"></textarea>
 
-        <button type="button" class="btn-remove-skill" onclick="removeSkillField(this)">Xóa Kỹ Năng</button>
-    `;
+                <button type="button" class="btn-remove-skill" onclick="removeSkillField(this)">Xóa Kỹ Năng</button>
+            `;
             skillsContainer.appendChild(skillItem);
         }
 
@@ -144,7 +162,6 @@
             const skillItem = button.parentElement;
             skillItem.remove();
         }
-
     </script>
 </head>
 <body>
@@ -152,6 +169,14 @@
     <h1>Thêm Công Việc Mới</h1>
 </header>
 <main>
+    <!-- Thông báo lỗi hoặc thành công -->
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}"></span>
+    </div>
+    <div th:if="${successMessage}" class="alert alert-success">
+        <span th:text="${successMessage}"></span>
+    </div>
+
     <form th:action="@{/recruiter/dashboard/jobs/new}" method="post">
         <!-- Nhập tên công việc -->
         <label for="jobName">Tên Công Việc:</label>
@@ -168,7 +193,6 @@
         <div id="skillsContainer" class="skills-section">
             <!-- Thymeleaf loop for existing skills -->
             <div th:each="skill, iterStat : ${jobSkills}" class="skill-item">
-                <!-- Unique IDs using Thymeleaf -->
                 <label th:for="'skillName-' + ${iterStat.index}">Tên Kỹ Năng:</label>
                 <input type="text" th:id="'skillName-' + ${iterStat.index}" th:name="skillName[]" placeholder="Nhập tên kỹ năng" th:value="${skill.skillName}" required>
 
@@ -190,7 +214,6 @@
 
                 <button type="button" class="btn-remove-skill" onclick="removeSkillField(this)">Xóa Kỹ Năng</button>
             </div>
-
         </div>
         <button type="button" onclick="addSkillField()">+ Thêm Kỹ Năng</button>
 
