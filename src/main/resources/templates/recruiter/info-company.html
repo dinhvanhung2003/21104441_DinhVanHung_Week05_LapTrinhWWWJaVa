@@ -27,7 +27,7 @@
         <!-- Tên công ty -->
         <div class="mb-4">
             <label for="name" class="form-label font-semibold">Tên Công Ty:</label>
-            <input type="text" id="name" name="company.name" th:value="${companyFullInfoDTO.company.compName}"
+            <input type="text" id="name" name="company.compName" th:value="${companyFullInfoDTO.company.compName}"
                    class="form-control" placeholder="Nhập tên công ty" required>
         </div>
 
@@ -89,15 +89,16 @@
 
         <!-- Website -->
         <div class="mb-4">
-            <label for="webURL" class="form-label font-semibold">Website:</label>
-            <input type="url" id="webURL" name="company.webURL" th:value="${companyFullInfoDTO.company.webUrl}"
+            <label for="webUrl" class="form-label font-semibold">Website:</label>
+            <input type="url" id="webUrl" name="company.webUrl" th:value="${companyFullInfoDTO.company.webUrl}"
                    class="form-control" placeholder="Nhập URL website">
         </div>
         <!-- CSRF -->
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-        <!-- Nút submit -->
-        <div class="text-center mt-5">
-            <button type="submit" class="btn btn-primary w-100 py-2">Lưu Thông Tin</button>
+        <!-- Nút quay lại -->
+        <div class="d-flex justify-content-between mt-4">
+            <a href="/recruiter/dashboard" class="btn btn-secondary">Quay Lại</a>
+            <button type="submit" class="btn btn-primary">Lưu Thông Tin</button>
         </div>
     </form>
 </div>

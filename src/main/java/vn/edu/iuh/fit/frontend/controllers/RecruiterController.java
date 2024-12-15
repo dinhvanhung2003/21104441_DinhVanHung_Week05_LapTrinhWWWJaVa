@@ -250,72 +250,65 @@ public String evaluateAllCandidates(@PathVariable Long jobId, Model model) {
     }
 
 
-    @PostMapping("dashboard/info-company")
+    @PostMapping("/dashboard/info-company")
     public String saveOrUpdateCompanyProfile(
             @ModelAttribute CompanyFullInfo companyFullInfoDTO,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         try {
-            // Lấy thông tin accountId từ session
+            // Lấy account ID từ session
             Long accountId = (Long) session.getAttribute("accountId");
             if (accountId == null) {
-                throw new RuntimeException("Account ID không tồn tại trong session!");
+                throw new RuntimeException("Không tìm thấy tài khoản trong session!");
             }
 
-            // Lấy thông tin tài khoản từ database
+            // Lấy tài khoản từ database
             Account account = accountRepository.findById(accountId)
                     .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại!"));
 
-            // Lấy hoặc tạo mới thông tin công ty
+            // Lấy công ty hoặc tạo mới
             Company company = account.getCompany();
             if (company == null) {
                 company = new Company();
             }
 
-            // Debug dữ liệu nhận từ form
-            System.out.println("Tên công ty nhận được: " + companyFullInfoDTO.getCompany().getCompName());
-            System.out.println("Địa chỉ nhận được: " + companyFullInfoDTO.getAddress());
-
-            // Cập nhật thông tin công ty từ DTO
-            if (companyFullInfoDTO.getCompany() != null) {
-                company.setCompName(companyFullInfoDTO.getCompany().getCompName());
-                company.setAbout(companyFullInfoDTO.getCompany().getAbout());
-                company.setPhone(companyFullInfoDTO.getCompany().getPhone());
-                company.setWebUrl(companyFullInfoDTO.getCompany().getWebUrl());
-                company.setEmail(companyFullInfoDTO.getCompany().getEmail());
-            } else {
-                throw new RuntimeException("Thông tin công ty bị thiếu!");
+            // Lấy dữ liệu công ty từ DTO
+            Company companyData = companyFullInfoDTO.getCompany();
+            if (companyData == null || companyData.getCompName() == null || companyData.getCompName().isEmpty()) {
+                throw new RuntimeException("Tên công ty không được để trống!");
             }
+
+            company.setCompName(companyData.getCompName());
+            company.setAbout(companyData.getAbout());
+            company.setPhone(companyData.getPhone());
+            company.setEmail(companyData.getEmail());
+            company.setWebUrl(companyData.getWebUrl());
 
             // Xử lý địa chỉ
             Address address = companyFullInfoDTO.getAddress();
-            if (address != null) {
-                Address savedAddress = addressRepository.save(address);
-                company.setAddress(savedAddress);
-            } else {
-                throw new RuntimeException("Thông tin địa chỉ bị thiếu!");
+            if (address == null) {
+                address = new Address(); // Tạo mới nếu không có địa chỉ
             }
+            Address savedAddress = addressRepository.save(address);
+            company.setAddress(savedAddress);
 
-            // Lưu thông tin công ty
+            // Lưu công ty
             Company savedCompany = companyRepository.save(company);
+
+            // Liên kết với tài khoản
             account.setCompany(savedCompany);
             accountRepository.save(account);
 
-            // Thêm thông báo thành công
-            redirectAttributes.addFlashAttribute("successMessage", "Thông tin công ty đã được lưu thành công!");
-
-            return "redirect:/recruiter/dashboard/jobs"; // Chuyển hướng về dashboard nhà tuyển dụng
+            // Gửi thông báo thành công
+            redirectAttributes.addFlashAttribute("successMessage", "Thông tin công ty đã được cập nhật thành công!");
+            return "redirect:/recruiter/dashboard/info-company";
         } catch (Exception e) {
-            // Thêm thông báo lỗi
-            redirectAttributes.addFlashAttribute("errorMessage", "Cập nhật thông tin công ty thất bại: " + e.getMessage());
-            e.printStackTrace(); // Debug lỗi trên console
-            return "redirect:/recruiter/dashboard/info-company"; // Quay lại trang hiện tại để sửa lỗi
+            // Gửi thông báo lỗi
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi cập nhật thông tin công ty: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/recruiter/dashboard/info-company";
         }
     }
-
-
-
-
 
 
 }
