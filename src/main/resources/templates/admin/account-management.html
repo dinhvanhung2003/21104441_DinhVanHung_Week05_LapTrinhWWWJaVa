@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý tài khoản</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Quản lý tài khoản</h1>
+    <a href="/admin/accounts/add" class="btn btn-success mb-3">Thêm mới tài khoản</a>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên tài khoản</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="account : ${accounts}">
+            <td th:text="${account.id}"></td>
+            <td th:text="${account.username}"></td>
+            <td th:text="${account.role.roleName}"></td>
+            <td th:text="${account.enabled ? 'Kích hoạt' : 'Vô hiệu hóa'}"></td>
+            <td>
+                <a th:href="@{/admin/accounts/edit/{id}(id=${account.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                <form th:action="@{/admin/accounts/disable/{id}(id=${account.id})}" method="post" style="display: inline-block;">
+                    <button type="submit" class="btn btn-danger btn-sm">Vô hiệu hóa</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

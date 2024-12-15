@@ -91,7 +91,7 @@ public class RecruiterController {
 //        return "recruiter/evaluation-result";
 //    }
 @PostMapping("/dashboard/jobs/{jobId}/candidates/evaluate-all")
-public String evaluateAllCandidates(@PathVariable Long jobId, Model model) {
+public String evaluateAllCandidates(@PathVariable Long jobId, RedirectAttributes redirectAttributes) {
     try {
         // Gửi yêu cầu POST tới API Flask để đánh giá tất cả ứng viên
         HttpHeaders headers = new HttpHeaders();
@@ -110,16 +110,16 @@ public String evaluateAllCandidates(@PathVariable Long jobId, Model model) {
 
         if (response.getStatusCode() == HttpStatus.OK) {
             List sentEmails = response.getBody();
-            model.addAttribute("sentEmails", sentEmails);
-            model.addAttribute("jobId", jobId);
+            redirectAttributes.addFlashAttribute("successMessage", "Đánh giá thành công. Email đã được gửi!");
         } else {
-            model.addAttribute("error", "Không thể đánh giá ứng viên cho công việc này.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Không thể đánh giá ứng viên cho công việc này.");
         }
     } catch (Exception e) {
-        model.addAttribute("error", "Lỗi khi gọi API đánh giá ứng viên: " + e.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi gọi API đánh giá ứng viên: " + e.getMessage());
     }
-    return "recruiter/sentEmails";
+    return "redirect:/recruiter/dashboard/jobs/" + jobId + "/candidates/sent-emails";
 }
+
 
 
     // Trang Dashboard của nhà tuyển dụng

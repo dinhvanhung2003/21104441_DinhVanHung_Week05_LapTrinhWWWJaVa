@@ -27,13 +27,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Lặp qua danh sách ứng viên -->
                 <tr th:each="candidate : ${candidates}">
-                    <td th:text="${candidate.id}">1</td>
-                    <td th:text="${candidate.fullName}">Nguyễn Văn A</td>
-                    <td th:text="${candidate.email}">email@example.com</td>
-                    <td th:text="${candidate.phone}">0123456789</td>
-                    <td th:text="${candidate.dob}">1990-01-01</td>
+                    <td th:text="${candidate.id}"></td>
+                    <td th:text="${candidate.fullName}"></td>
+                    <td th:text="${candidate.email}"></td>
+                    <td th:text="${candidate.phone}"></td>
+                    <td th:text="${candidate.dob}"></td>
                 </tr>
                 </tbody>
             </table>

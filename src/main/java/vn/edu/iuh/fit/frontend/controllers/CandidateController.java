@@ -129,12 +129,6 @@ public class CandidateController {
         model.addAttribute("isProfileUpdated", isProfileUpdated);
         // Định dạng ngày tháng cho từ ngày và đến ngày trong kinh nghiệm làm việc
 
-
-
-
-
-
-
         if (candidate.getExperiences() != null) {
             candidate.getExperiences().forEach(exp -> {
                 if (exp.getFromDate() == null) {

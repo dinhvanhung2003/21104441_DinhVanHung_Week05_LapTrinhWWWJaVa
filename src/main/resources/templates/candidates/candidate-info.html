@@ -33,7 +33,8 @@
             <div class="col-md-6">
                 <label for="dob" class="form-label">Ngày sinh:</label>
                 <input type="date" class="form-control"
-                       th:value="${candidateFullInfoDTO.candidate.dob != null ? #dates.format(candidateFullInfoDTO.candidate.dob, 'yyyy-MM-dd') : ''}"
+                       th:value="${candidateFullInfoDTO.candidate.dob != null ? #temporals.format(candidateFullInfoDTO.candidate.dob, 'yyyy-MM-dd') : ''}"
+
                        name="candidate.dob" id="dob" required>
 
 
@@ -99,17 +100,20 @@
                     <div class="col-md-6">
                         <label for="fromDate-[[${iterStat.index}]]" class="form-label">Từ ngày:</label>
                         <input type="date" class="form-control"
-                               th:field="*{experiences[__${iterStat.index}__].fromDate}"
+                               th:value="${experience.fromDate != null ? #temporals.format(experience.fromDate, 'yyyy-MM-dd') : '1970-01-01'}"
+                               name="experiences[__${iterStat.index}__].fromDate"
                                id="fromDate-[[${iterStat.index}]]" required>
-
                     </div>
                     <div class="col-md-6">
                         <label for="toDate-[[${iterStat.index}]]" class="form-label">Đến ngày:</label>
-                        <<input type="date" class="form-control"
-                                th:field="*{experiences[__${iterStat.index}__].toDate}"
-                                id="toDate-[[${iterStat.index}]]">
+                        <input type="date" class="form-control"
+                               th:value="${experience.toDate != null ? #temporals.format(experience.toDate, 'yyyy-MM-dd') : ''}"
+                               name="experiences[__${iterStat.index}__].toDate"
+                               id="toDate-[[${iterStat.index}]]">
                     </div>
                 </div>
+
+
 
                 <div class="row mb-3">
                     <div class="col-md-6">
