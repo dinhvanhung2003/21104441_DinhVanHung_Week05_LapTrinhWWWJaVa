@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
+            background-color: #f0f2f5;
             color: #333;
             margin: 0;
             padding: 0;
@@ -20,14 +20,30 @@
         .form-container {
             background-color: #fff;
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             width: 400px;
+            position: relative;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUuR6lY1HPFS4Q_R2A5r70ECdchXmR_n1b8g&s');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
             margin-bottom: 20px;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             text-align: center;
             color: #007BFF;
         }
@@ -41,10 +57,18 @@
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007BFF;
+            outline: none;
         }
 
         input[type="checkbox"] {
@@ -53,18 +77,20 @@
 
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #007BFF;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
         .error {
@@ -79,6 +105,22 @@
             font-size: 0.9rem;
             margin-bottom: 15px;
             text-align: center;
+        }
+
+        .form-container small {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .form-container small a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .form-container small a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -108,6 +150,7 @@
 
         <button type="submit">Đăng Ký</button>
     </form>
+    <small>Đã có tài khoản? <a href="/login">Đăng nhập</a></small>
 </div>
 </body>
 </html>

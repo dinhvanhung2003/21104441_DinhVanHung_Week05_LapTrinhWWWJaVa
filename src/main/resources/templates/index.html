@@ -21,27 +21,26 @@
 <div th:replace="~{header.html}"></div>
 
 <!-- Banner Tìm Việc -->
-<section class="relative bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.careerviet.vn/background/career-start-viec-tot-luong-cao-1900x570_2020_06_02_1591068457.jpg')">
-    <div class="bg-black bg-opacity-50">
-        <div class="container mx-auto px-4 py-16 text-center">
-            <div class="max-w-md mx-auto bg-white bg-opacity-90 rounded-lg p-8">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Đón lấy thành công với
-                    <span class="font-extrabold text-gray-900">25,032</span> cơ hội nghề nghiệp
-                </h3>
-                <form th:action="@{/home}" method="get" class="flex flex-col sm:flex-row items-center gap-2">
-                    <input type="text" name="query" class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none" placeholder="Chức danh" th:value="${query}">
-                    <button type="submit" class="px-5 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700">
-                        Tìm Việc Ngay
-                    </button>
-                </form>
-                <p class="mt-4 text-sm font-semibold text-gray-800">
-                    Đăng hồ sơ nghề nghiệp để dễ dàng ứng tuyển nhanh
-                </p>
-            </div>
+<section class="relative bg-cover bg-center bg-no-repeat h-[100vh]"
+         style="background-image: url('https://images.careerviet.vn/background/career-start-viec-tot-luong-cao-1900x570_2020_06_02_1591068457.jpg');">
+    <div class="bg-black bg-opacity-50 h-full flex items-center justify-center">
+        <div class="max-w-md mx-auto bg-white bg-opacity-90 rounded-lg p-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                Đón lấy thành công với <span class="font-extrabold text-gray-900">25,032</span> cơ hội nghề nghiệp
+            </h3>
+            <form th:action="@{/home}" method="get" class="flex flex-col sm:flex-row items-center gap-2">
+                <input type="text" name="query" class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none" placeholder="Chức danh" th:value="${query}">
+                <button type="submit" class="px-5 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700">
+                    Tìm Việc Ngay
+                </button>
+            </form>
+            <p class="mt-4 text-sm font-semibold text-gray-800">
+                Đăng hồ sơ nghề nghiệp để dễ dàng ứng tuyển nhanh
+            </p>
         </div>
-    </div>!
-
+    </div>
 </section>
+
 
 <!-- Thêm phần hiển thị công việc được gợi ý -->
 <section class="container mx-auto px-4 py-8">
